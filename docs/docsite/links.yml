@@ -1,0 +1,11 @@
+---
+edit_on_github:
+  repository: trfore/ansible-smallstep
+  branch: main
+  path_prefix: ""
+
+extra_links:
+  - description: Submit a Bug Report
+    url: https://github.com/trfore/ansible-smallstep/issues/new?assignees=trfore&labels=bug&projects=&template=bug_report.yml&title=%5BBug%5D%3A+
+  - description: Request a Feature
+    url: https://github.com/trfore/ansible-smallstep/issues/new?assignees=trfore&labels=enhancement&projects=&template=feature_request.yml&title=%5BFeature%5D%3A+
