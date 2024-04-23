@@ -5,7 +5,7 @@
 
 - This collection is for setting up a a public key infrastructure (PKI) using Smallstep. It will install CA server and, optionally, configure the CA server and host servers ("clients") to request x509 certificates from the CA.
 - The default values for the collection are set with the intention of being used in production and **initializing the CA server offline, outside of an Ansible play**. However, you can set `step_ca_initialize: true` and initialize the PKI via an Ansible playbook, for more details see:
-  - [`step_ca` readme](roles/step_ca/README.md) or [scenario guide: ca](https://trfore.github.io/ansible-smallstep/guide_ca_nonproduction.html)
+  - [`step_ca` readme](roles/step_ca/README.md) or [scenario guide: ca](https://trfore.github.io/ansible-smallstep/branch/main/docsite/guide_ca_nonproduction.html)
 
 ## Install the Collection
 
@@ -17,7 +17,7 @@ ansible-galaxy collection install trfore.smallstep
 
 ## Roles
 
-- Variables and default values are listed in each role's README and available at the documentation website: https://trfore.github.io/ansible-smallstep
+- Variables and default values are listed in each role's README and available at the documentation website: https://trfore.github.io/ansible-smallstep/branch/main
   - [`step_ca`](roles/step_ca/README.md) - Install and Initialize Step CA
   - [`step_ca_cert`](roles/step_ca_cert/README.md) - Download and add the CA root certificate to trust stores
   - [`step_cert`](roles/step_cert/README.md) - Request an x509 certificate from the CA and automatically renew it
