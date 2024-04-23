@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="2.10.0" name="antsibull-docs" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>trfore.smallstep.step_ca role – Install Step Certificates &mdash; trfore.smallstep  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5707b69d" />
+      <link rel="stylesheet" type="text/css" href="_static/css/ansible.css?v=c5b67dd2" />
+      <link rel="stylesheet" type="text/css" href="_static/antsibull-minimal.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/rtd-ethical-ads.css?v=289b023e" />
+
+  
+    <link rel="shortcut icon" href="_static/images/Ansible-Mark-RGB_Black.png"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=7f41d439"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="trfore.smallstep.step_ca_cert role – Download and add the CA root certificate to trust stores" href="step_ca_cert_role.html" />
+    <link rel="prev" title="Setup Servers and User Machines to Use SSH Certificates" href="docsite/guide_ssh.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
+
+
+
+
+</head>
+
+<body class="wy-body-for-nav"><!-- extra body elements for Ansible beyond RTD Sphinx Theme -->
+
+<div class="DocSite-globalNav ansibleNav">
+  <ul>
+    <li><a href="https://www.ansible.com/blog" target="_blank">Blog</a></li>
+    <li><a href="https://forum.ansible.com/" target="_blank">Ansible community forum</a></li>
+    <li><a href="https://docs.ansible.com/" target="_blank">Documentation</a></li>
+  </ul>
+</div>
+
+<a class="DocSite-nav" href="https://trfore.github.io/ansible-smallstep/branch/main/" style="padding-bottom: 30px;">
+
+  <img class="DocSiteNav-logo"
+    src="_static/images/Ansible-Mark-RGB_White.png"
+    alt="Ansible Logo">
+  <div class="DocSiteNav-title">trfore.smallstep</div>
+</a>
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            trfore.smallstep
+          </a><!--- Based on https://github.com/rtfd/sphinx_rtd_theme/pull/438/files -->
+
+<div class="version">
+  
+    
+  
+</div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <label class="sr-only" for="q">Search docs:</label>
+    <input type="text" class="st-default-search-input" id="q" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="docsite/guide_ca_nonproduction.html">Setup a Step CA Server (Non-Production)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docsite/guide_client.html">Setup a Step Client (Machine / Server)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docsite/guide_ssh.html">Setup Servers and User Machines to Use SSH Certificates</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">trfore.smallstep.step_ca role – Install Step Certificates</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#entry-point-initialize-initializes-a-public-key-infrastructure-pki-to-be-used-by-step-ca">Entry point <code class="docutils literal notranslate"><span class="pre">initialize</span></code> – Initializes a public key infrastructure (PKI) to be used by step CA</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#entry-point-main-install-step-certificates">Entry point <code class="docutils literal notranslate"><span class="pre">main</span></code> – Install Step Certificates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Synopsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#entry-point-service-create-systemd-service-for-step-ca">Entry point <code class="docutils literal notranslate"><span class="pre">service</span></code> – Create systemd service for `step-ca`</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Synopsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Parameters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#collection-links">Collection links</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="step_ca_cert_role.html">trfore.smallstep.step_ca_cert role – Download and add the CA root certificate to trust stores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_cert_role.html">trfore.smallstep.step_cert role – Request x509 certificates from the step CA server and automatically renew them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_cli_role.html">trfore.smallstep.step_cli role – Install Step CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_provisioner_role.html">trfore.smallstep.step_provisioner role – Add provisioners to Step CA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_ssh_role.html">trfore.smallstep.step_ssh role – Request SSH Certificate from step CA Server</a></li>
+</ul>
+<!-- extra nav elements for Ansible beyond RTD Sphinx Theme -->
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">trfore.smallstep</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">trfore.smallstep.step_ca role – Install Step Certificates</li>
+      <li class="wy-breadcrumbs-aside">
+              <!-- User defined GitHub URL -->
+              <a href="https://github.com/trfore/ansible-smallstep/edit/main/roles/step_ca/meta/argument_specs.yml?description=%23%23%23%23%23%20SUMMARY%0A%3C!—%20Your%20description%20here%20–%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+  
+           <div itemprop="articleBody">
+             
+  <span class="target" id="ansible-collections-trfore-smallstep-step-ca-role"></span><section id="trfore-smallstep-step-ca-role-install-step-certificates">
+<h1>trfore.smallstep.step_ca role – Install Step Certificates<a class="headerlink" href="#trfore-smallstep-step-ca-role-install-step-certificates" title="Link to this heading"></a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This role is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/trfore/smallstep/">trfore.smallstep collection</a> (version 1.1.0).</p>
+<p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
+To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
+<p>To install it use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">trfore.smallstep</span></code>.</p>
+<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">trfore.smallstep.step_ca</span></code>.</p>
+</div>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#entry-point-initialize-initializes-a-public-key-infrastructure-pki-to-be-used-by-step-ca" id="id5">Entry point <code class="docutils literal notranslate"><span class="pre">initialize</span></code> – Initializes a public key infrastructure (PKI) to be used by step CA</a></p>
+<ul>
+<li><p><a class="reference internal" href="#synopsis" id="id6">Synopsis</a></p></li>
+<li><p><a class="reference internal" href="#parameters" id="id7">Parameters</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#entry-point-main-install-step-certificates" id="id8">Entry point <code class="docutils literal notranslate"><span class="pre">main</span></code> – Install Step Certificates</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id1" id="id9">Synopsis</a></p></li>
+<li><p><a class="reference internal" href="#id2" id="id10">Parameters</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#entry-point-service-create-systemd-service-for-step-ca" id="id11">Entry point <code class="docutils literal notranslate"><span class="pre">service</span></code> – Create systemd service for `step-ca`</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id3" id="id12">Synopsis</a></p></li>
+<li><p><a class="reference internal" href="#id4" id="id13">Parameters</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="entry-point-initialize-initializes-a-public-key-infrastructure-pki-to-be-used-by-step-ca">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Entry point <code class="docutils literal notranslate"><span class="pre">initialize</span></code> – Initializes a public key infrastructure (PKI) to be used by step CA</a><a class="headerlink" href="#entry-point-initialize-initializes-a-public-key-infrastructure-pki-to-be-used-by-step-ca" title="Link to this heading"></a></h2>
+<section id="synopsis">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>This will initialize the a PKI to be used by step CA.</p></li>
+<li><p>The default initialization values are for non-production use only, as it will generate the PKI on the local disk at `/etc/step-ca/`. This path is assigned using the `step_ca_path` variable. Additionally, it will create two password files, `/etc/step-ca/password.txt` and `/etc/step-ca/password-provisioner.txt`, that are read-write only by the system-user `step`.</p></li>
+<li><p>Sensitive values are masked from ansible log, however, it is important to store these values using a form of encryption, e.g. ansible-vault.</p></li>
+<li><p>It is possible to productionize this role and initialize the PKI on a removable usb-drive; followed by a custom ansible task to move the keys to a security device, such as Yubikey. However, this is beyond the scope of the role and collection.</p></li>
+</ul>
+</section>
+<section id="parameters">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Comments</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-initialize--step_ca_address"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-initialize-step-ca-address"><strong>step_ca_address</strong></p>
+<a class="ansibleOptionLink" href="#parameter-initialize--step_ca_address" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Address the CA will listen at.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;:443&quot;</span></code></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-initialize--step_ca_name"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-initialize-step-ca-name"><strong>step_ca_name</strong></p>
+<a class="ansibleOptionLink" href="#parameter-initialize--step_ca_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Name of the public key infrastructure (PKI).</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-initialize--step_ca_password"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-initialize-step-ca-password"><strong>step_ca_password</strong></p>
+<a class="ansibleOptionLink" href="#parameter-initialize--step_ca_password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Password to encrypt the root and intermediate keys.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-initialize--step_ca_path"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-initialize-step-ca-path"><strong>step_ca_path</strong></p>
+<a class="ansibleOptionLink" href="#parameter-initialize--step_ca_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">path</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Path to Step CA folder containing configuration and certificate files.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;/etc/step-ca/&quot;</span></code></p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-initialize--step_ca_provisioner_password"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-initialize-step-ca-provisioner-password"><strong>step_ca_provisioner_password</strong></p>
+<a class="ansibleOptionLink" href="#parameter-initialize--step_ca_provisioner_password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Password for default JWK provisioner.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-initialize--step_ca_root_cert"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-initialize-step-ca-root-cert"><strong>step_ca_root_cert</strong></p>
+<a class="ansibleOptionLink" href="#parameter-initialize--step_ca_root_cert" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">path</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Path to existing PEM file to be used as the root CA.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-initialize--step_ca_root_key"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-initialize-step-ca-root-key"><strong>step_ca_root_key</strong></p>
+<a class="ansibleOptionLink" href="#parameter-initialize--step_ca_root_key" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">path</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Path to key file for the existing PEM certificate.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-initialize--step_ca_root_key_password"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-initialize-step-ca-root-key-password"><strong>step_ca_root_key_password</strong></p>
+<a class="ansibleOptionLink" href="#parameter-initialize--step_ca_root_key_password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">path</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Path to file with decryption password for the existing PEM certificate key.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-initialize--step_ca_ssh_mgmt"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-initialize-step-ca-ssh-mgmt"><strong>step_ca_ssh_mgmt</strong></p>
+<a class="ansibleOptionLink" href="#parameter-initialize--step_ca_ssh_mgmt" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Enable Step CA SSH certificate management.</p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+<ul class="simple">
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">false</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
+</ul>
+</div></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="entry-point-main-install-step-certificates">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Entry point <code class="docutils literal notranslate"><span class="pre">main</span></code> – Install Step Certificates</a><a class="headerlink" href="#entry-point-main-install-step-certificates" title="Link to this heading"></a></h2>
+<p class="ansible-version-added">New in trfore.smallstep 1.0.0</p>
+<section id="id1">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Synopsis</a><a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Install step CA, `step-ca`, for generating SSL/TLS certificates.</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Parameters</a><a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Comments</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--step_ca_checksum"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-main-step-ca-checksum"><strong>step_ca_checksum</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--step_ca_checksum" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>URL to `step-ca` package checksum. If empty, the checksum is skipped.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;https://github.com/smallstep/certificates/releases/download/v{{</span> <span class="pre">step_ca_version</span> <span class="pre">}}/checksums.txt&quot;</span></code></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--step_ca_enable_service"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-main-step-ca-enable-service"><strong>step_ca_enable_service</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--step_ca_enable_service" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Create systemd service for `step-ca`.</p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+<ul class="simple">
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">false</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--step_ca_initialize"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-main-step-ca-initialize"><strong>step_ca_initialize</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--step_ca_initialize" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Initialize a public key infrastructure (PKI) to be used by the CA.</p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+<ul class="simple">
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">false</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--step_ca_pkg_src"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-main-step-ca-pkg-src"><strong>step_ca_pkg_src</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--step_ca_pkg_src" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>URL to `step-ca` package. Can be overridden in playbook when using a proxy.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;https://github.com/smallstep/certificates/releases/download/v{{</span> <span class="pre">step_ca_version</span> <span class="pre">}}/step-ca_{{</span> <span class="pre">step_ca_version</span> <span class="pre">}}_amd64.{{</span> <span class="pre">__pkg_extension</span> <span class="pre">}}&quot;</span></code></p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--step_ca_version"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-main-step-ca-version"><strong>step_ca_version</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--step_ca_version" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>SemVer of `step-ca` to install, e.g. `0.15.7`, defaults to the latest version.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code></p>
+</div></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="entry-point-service-create-systemd-service-for-step-ca">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Entry point <code class="docutils literal notranslate"><span class="pre">service</span></code> – Create systemd service for `step-ca`</a><a class="headerlink" href="#entry-point-service-create-systemd-service-for-step-ca" title="Link to this heading"></a></h2>
+<section id="id3">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">Synopsis</a><a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Creates systemd unit file, `step-ca.service`, and enables the service.</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">Parameters</a><a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Comments</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-service--step_ca_path"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ca-role-parameter-service-step-ca-path"><strong>step_ca_path</strong></p>
+<a class="ansibleOptionLink" href="#parameter-service--step_ca_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">path</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Path to Step CA folder containing configuration and certificate files.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;/etc/step-ca/&quot;</span></code></p>
+</div></td>
+</tr>
+</tbody>
+</table>
+<section id="collection-links">
+<h4>Collection links<a class="headerlink" href="#collection-links" title="Link to this heading"></a></h4>
+<ul class="ansible-links">
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/trfore/ansible-smallstep/issues" rel="noopener external" target="_blank">Issue Tracker</a></span></li>
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/trfore/ansible-smallstep" rel="noopener external" target="_blank">Repository (Sources)</a></span></li>
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/trfore/ansible-smallstep/issues/new?assignees=trfore&amp;labels=bug&amp;projects=&amp;template=bug_report.yml&amp;title=%5BBug%5D%3A+" rel="noopener external" target="_blank">Submit a Bug Report</a></span></li>
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/trfore/ansible-smallstep/issues/new?assignees=trfore&amp;labels=enhancement&amp;projects=&amp;template=feature_request.yml&amp;title=%5BFeature%5D%3A+" rel="noopener external" target="_blank">Request a Feature</a></span></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+<footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="docsite/guide_ssh.html" class="btn btn-neutral float-left" title="Setup Servers and User Machines to Use SSH Certificates" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="step_ca_cert_role.html" class="btn btn-neutral float-right" title="trfore.smallstep.step_ca_cert role – Download and add the CA root certificate to trust stores" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright trfore.smallstep contributors.</p>
+  </div>
+
+  
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script><!-- extra footer elements for Ansible beyond RTD Sphinx Theme -->
+
+</body>
+</html>
