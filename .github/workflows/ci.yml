@@ -1,0 +1,65 @@
+name: CI
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    branches:
+      - "main"
+    paths-ignore:
+      - "README.md"
+  workflow_dispatch:
+
+jobs:
+  changelog:
+    if: github.event_name == 'pull_request'
+    uses: ansible/ansible-content-actions/.github/workflows/changelog.yaml@main
+  lint_ansible:
+    uses: ansible/ansible-content-actions/.github/workflows/ansible_lint.yaml@main
+  sanity:
+    uses: ansible/ansible-content-actions/.github/workflows/sanity.yaml@main
+  molecule_test:
+    needs:
+      - changelog
+      - lint_ansible
+      - sanity
+    strategy:
+      fail-fast: false
+      matrix:
+        distro:
+          [
+            centos8,
+            centos9,
+            debian10,
+            debian11,
+            debian12,
+            ubuntu2004,
+            ubuntu2204,
+            ubuntu2404,
+          ]
+        experimental: [false]
+        molecule_scenario: ["-s default", "-s step_ssh"]
+    uses: trfore/ansible-role/.github/workflows/test_ansible.yml@main
+    with:
+      distro: ${{ matrix.distro }}
+      experimental: ${{ matrix.experimental }}
+      molecule_glob: "./extensions/molecule/*/molecule.yml"
+      molecule_scenario: ${{ matrix.molecule_scenario }}
+  check:
+    if: ${{ always() && (github.event_name != 'schedule') }}
+    needs:
+      - changelog
+      - lint_ansible
+      - sanity
+      - molecule_test
+    runs-on: ubuntu-latest
+    steps:
+      - run: >-
+          python -c "assert set([
+          '${{ needs.changelog.result }}',
+          '${{ needs.lint_ansible.result }}',
+          '${{ needs.sanity.result }}',
+          '${{ needs.molecule_test.result }}',
+          ]) == {'success'}"
