@@ -40,6 +40,7 @@ jobs:
       experimental: ${{ matrix.experimental }}
       molecule_glob: "./extensions/molecule/*/molecule.yml"
       molecule_scenario: ${{ matrix.molecule_scenario }}
+      requirements_file: "requirements/dev-requirements.txt"
   check:
     if: ${{ always() && (github.event_name != 'schedule') }}
     needs:
@@ -49,8 +50,6 @@ jobs:
     steps:
       - run: >-
           python -c "assert set([
-          '${{ needs.changelog.result }}',
-          '${{ needs.lint_ansible.result }}',
           '${{ needs.sanity.result }}',
           '${{ needs.molecule_test.result }}',
           ]) == {'success'}"
