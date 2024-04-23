@@ -1,0 +1,93 @@
+---
+- name: Initialize Hosts
+  hosts: all
+  pre_tasks:
+    - name: Update APT cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_os_family == 'Debian'
+      changed_when: false
+      delay: 4
+      retries: 5
+
+    - name: Install essential packages for HTTPS
+      ansible.builtin.apt:
+        name:
+          - gnupg
+          - ca-certificates
+          - apt-transport-https
+        state: present
+      when: ansible_distribution == 'Debian'
+
+    - name: Install OpenSSH
+      ansible.builtin.package:
+        name:
+          - openssh-server
+          - "{{ 'openssh-clients' if ansible_os_family == 'RedHat' else 'openssh-client' }}"
+
+    - name: Generate Root Certificate
+      block:
+        - name: Create Directory for Root Certificate
+          ansible.builtin.file:
+            path: /root/ca
+            state: directory
+            owner: root
+            group: root
+            mode: 0700
+
+        - name: Create private key with password protection
+          community.crypto.openssl_privatekey:
+            path: /root/ca/ca_root_cert.key
+            cipher: auto
+            passphrase: "capassword01"
+
+        - name: Check for CA Certificate
+          ansible.builtin.stat:
+            path: /root/ca/ca_root_cert.pem
+          register: ca_crt
+
+        - name: Create certificate signing request (CSR) for CA certificate
+          community.crypto.openssl_csr_pipe:
+            privatekey_path: /root/ca/ca_root_cert.key
+            privatekey_passphrase: "capassword01"
+            common_name: Example.com CA
+            use_common_name_for_san: false
+            basic_constraints:
+              - "CA:TRUE"
+            basic_constraints_critical: true
+            key_usage:
+              - keyCertSign
+            key_usage_critical: true
+          register: ca_csr
+          when: not ca_crt.stat.exists
+
+        - name: Create self-signed CA certificate from CSR
+          community.crypto.x509_certificate:
+            path: /root/ca/ca_root_cert.pem
+            csr_content: "{{ ca_csr.csr }}"
+            privatekey_path: /root/ca/ca_root_cert.key
+            privatekey_passphrase: "capassword01"
+            provider: selfsigned
+          when: not ca_crt.stat.exists
+
+        - name: Create CA Certificate Password File
+          ansible.builtin.copy:
+            src: ca_root_cert.txt
+            dest: /root/ca/ca_root_cert.txt
+            owner: root
+            group: root
+            mode: 0700
+
+  roles:
+    - name: Install Step Certificates
+      role: trfore.smallstep.step_ca
+      vars:
+        step_ca_initialize: true
+        step_ca_enable_service: true
+        step_ca_name: "Example.com CA"
+        step_ca_password: "password01"
+        step_ca_provisioner_password: "password02"
+        step_ca_root_cert: /root/ca/ca_root_cert.pem
+        step_ca_root_key: /root/ca/ca_root_cert.key
+        step_ca_root_key_password: /root/ca/ca_root_cert.txt
