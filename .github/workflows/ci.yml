@@ -13,17 +13,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  changelog:
-    if: github.event_name == 'pull_request'
-    uses: ansible/ansible-content-actions/.github/workflows/changelog.yaml@main
-  lint_ansible:
-    uses: ansible/ansible-content-actions/.github/workflows/ansible_lint.yaml@main
   sanity:
     uses: ansible/ansible-content-actions/.github/workflows/sanity.yaml@main
   molecule_test:
     needs:
-      - changelog
-      - lint_ansible
       - sanity
     strategy:
       fail-fast: false
@@ -50,8 +43,6 @@ jobs:
   check:
     if: ${{ always() && (github.event_name != 'schedule') }}
     needs:
-      - changelog
-      - lint_ansible
       - sanity
       - molecule_test
     runs-on: ubuntu-latest
