@@ -1,0 +1,173 @@
+# Ansible Collection - trfore.smallstep
+
+[![CI](https://github.com/trfore/ansible-smallstep/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/trfore/ansible-smallstep/actions/workflows/ci.yml)
+[![CD](https://github.com/trfore/ansible-smallstep/actions/workflows/cd.yml/badge.svg?branch=main)](https://github.com/trfore/ansible-smallstep/actions/workflows/cd.yml)
+
+- This collection is for setting up a a public key infrastructure (PKI) using Smallstep. It will install CA server and, optionally, configure the CA server and host servers ("clients") to request x509 certificates from the CA.
+- The default values for the collection are set with the intention of being used in production and **initializing the CA server offline, outside of an Ansible play**. However, you can set `step_ca_initialize: true` and initialize the PKI via an Ansible playbook, for more details see:
+  - [`step_ca` readme](roles/step_ca/README.md) or [scenario guide: ca](https://trfore.github.io/ansible-smallstep/guide_ca_nonproduction.html)
+
+## Install the Collection
+
+You can install this collection with the Ansible Galaxy CLI:
+
+```bash
+ansible-galaxy collection install trfore.smallstep
+```
+
+## Roles
+
+- Variables and default values are listed in each role's README and available at the documentation website: https://trfore.github.io/ansible-smallstep
+  - [`step_ca`](roles/step_ca/README.md) - Install and Initialize Step CA
+  - [`step_ca_cert`](roles/step_ca_cert/README.md) - Download and add the CA root certificate to trust stores
+  - [`step_cert`](roles/step_cert/README.md) - Request an x509 certificate from the CA and automatically renew it
+  - [`step_cli`](roles/step_cli/README.md) - Install Step CLI
+  - [`step_provisioner`](roles/step_provisioner/README.md) - Add provisioners to Step CA
+
+## Tested Platforms
+
+- `ansible-core` 2.14, 2.15 & 2.16
+- CentOS Stream 8 & 9
+- Debian 10, 11 & 12
+- Ubuntu 20.04, 22.04 & 24.04
+
+## Example Playbook
+
+### Production Workflow
+
+- Phase I: Create a step CA server.
+
+```yaml
+---
+- name: Setup Step CA Server
+  hosts: ca-server
+  become: true
+  gather_facts: true
+  roles:
+    - name: Install Step CLI
+      role: trfore.smallstep.step_cli
+
+    - name: Install Step Certificates
+      role: trfore.smallstep.step_ca
+### Initialize the CA Offline, storing the root key in an encrypted drive ###
+```
+
+- Phase II: Configure clients to request certificates from the CA.
+
+```yaml
+---
+- name: Extract Root CA Information
+  hosts: ca-server
+  become: true
+  tasks:
+    - name: Get Root CA Fingerprint
+      ansible.builtin.command: step certificate fingerprint /etc/step-ca/certs/root_ca.crt
+      register: ca_fingerprint
+      changed_when: true
+
+- name: Setup Step CA Clients (Servers)
+  hosts: ca_clients
+  become: true
+  gather_facts: true
+  roles:
+    - name: Install Step CLI
+      role: trfore.smallstep.step_cli
+
+    - name: Bootstrap Step CA Root Certificate
+      role: trfore.smallstep.step_ca_cert
+      vars:
+        step_ca_fingerprint: "{{ hostvars['ca-server'].ca_fingerprint.stdout }}"
+        step_ca_url: "https://ca.example.com"
+
+    - name: Request x509 Certificate
+      role: trfore.smallstep.step_cert
+```
+
+### Non-production Example with CA Initialization
+
+- A complete playbook file is available under [playbooks/non-production.yml (link)](https://github.com/trfore/ansible-smallstep/blob/main/playbooks/non-production.yml) with example [playbooks/group_vars (link)](https://github.com/trfore/ansible-smallstep/tree/main/playbooks/group_vars).
+
+```yaml
+---
+- name: Setup Step CA Server
+  hosts: ca-server
+  become: true
+  gather_facts: true
+  roles:
+    - name: Install Step Certificates
+      role: trfore.smallstep.step_ca
+      vars:
+        step_ca_initialize: true
+        step_ca_enable_service: true
+        step_ca_name: "Example.com CA" # Required
+        step_ca_password: "password01" # Required
+        step_ca_provisioner_password: "password02" # Required
+        step_ca_ssh_mgmt: true # For SSH certificates
+
+    - name: Add Provisioner to Step CA
+      role: trfore.smallstep.step_provisioner
+      vars:
+        step_provisioner:
+          - name: acme
+            type: acme
+            renewal_after_expiry: true
+            x509_default_dur: "48h"
+            x509_max_dur: "168h"
+          - name: google
+            type: oidc
+            ssh: true # For SSH certificates
+            client_id: "" # From GCP API Config
+            client_secret: "" # From GCP API Config
+            config_endpoint: "https://accounts.google.com/.well-known/openid-configuration"
+            domain: "gmail.com"
+          - name: sshpop # For SSH certificate renewal
+            type: sshpop
+            ssh: true
+
+  tasks:
+    - name: Get root CA fingerprint
+      ansible.builtin.command: step certificate fingerprint /etc/step-ca/certs/root_ca.crt
+      register: ca_fingerprint
+      changed_when: false
+      failed_when: ca_fingerprint.rc == 1
+
+- name: Setup Step CA Clients (Servers)
+  hosts: ca_clients
+  become: true
+  gather_facts: true
+  roles:
+    - name: Install Step CLI
+      role: trfore.smallstep.step_cli
+
+    - name: Bootstrap Step CA Root Certificate
+      role: trfore.smallstep.step_ca_cert
+      vars:
+        step_ca_fingerprint: "{{ hostvars['ca-server'].ca_fingerprint.stdout }}"
+        step_ca_url: "https://ca.example.com"
+
+    - name: Request x509 Certificate
+      role: trfore.smallstep.step_cert
+```
+
+## Author and License Information
+
+Taylor Fore (https://github.com/trfore)
+
+See LICENSE file for this Ansible collection.
+
+Smallstep (`certificates` and `cli`) is Apache 2.0 license software from Smallstep Labs, Inc. For additional information see:
+
+- https://smallstep.com/terms-of-use/
+- https://github.com/smallstep/certificates/blob/master/LICENSE
+- https://github.com/smallstep/cli/blob/master/LICENSE
+
+## References
+
+- https://smallstep.com/docs/step-ca/certificate-authority-server-production/
+- https://smallstep.com/docs/step-ca/provisioners/
+- https://smallstep.com/docs/step-cli/reference/ca/provisioner/add/
+
+### Using Smallstep in Production
+
+- Using a Yubikey as an alternative to a HSM, https://smallstep.com/blog/build-a-tiny-ca-with-raspberry-pi-yubikey/
+- https://smallstep.com/docs/step-ca/certificate-authority-server-production/
