@@ -1,0 +1,54 @@
+---
+- name: Setup Step CA Server
+  hosts: "{{ target_ca | default('ca-server') }}"
+  become: true
+  gather_facts: true
+  vars_files:
+    - ca-vars.yml
+    - ca-provisioners.yml
+  roles:
+    - name: Install Step CLI
+      role: trfore.smallstep.step_cli
+
+    - name: Install Step Certificates
+      role: trfore.smallstep.step_ca
+
+    - name: Add Provisioners to Step CA
+      role: trfore.smallstep.step_provisioner
+
+  post_tasks:
+    - name: Get Root CA Fingerprint
+      ansible.builtin.command: step certificate fingerprint /etc/step-ca/certs/root_ca.crt
+      register: ca_fingerprint
+      changed_when: false
+      failed_when: ca_fingerprint.rc == 1
+
+- name: Setup Step CA Clients (Servers)
+  hosts: "{{ target_clients | default('ca_clients') }}"
+  become: true
+  gather_facts: true
+  roles:
+    - name: Install Step CLI
+      role: trfore.smallstep.step_cli
+
+    - name: Bootstrap Step CA Root Certificate
+      role: trfore.smallstep.step_ca_cert
+      vars:
+        # molecule scenario workaround, see 'non-production.yml' for a simple approach
+        step_ca_fingerprint: "{{ groups['ca_server'] | map('extract', hostvars) | json_query('[].ca_fingerprint.stdout') | join('') }}" # noqa: var-naming[no-role-prefix]
+        # molecule scenario workaround
+        step_ca_url: "{{ groups['ca_server'] | map('extract', hostvars) | json_query('[].ansible_default_ipv4.address') | join('') }}" # noqa: var-naming[no-role-prefix]
+
+    - name: Request x509 Certificate
+      role: trfore.smallstep.step_cert
+      vars:
+        step_cert_list:
+          - name: "{{ ansible_fqdn }}"
+            subject: "{{ ansible_fqdn }}"
+            path: /etc/step/certs/
+            san_0: "{{ ansible_default_ipv4.address }}"
+            provisioner: "acme"
+          - name: "example"
+            subject: "example.local"
+            path: /etc/pki/example.local/
+            provisioner: "acme"

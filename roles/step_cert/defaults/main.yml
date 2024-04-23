@@ -1,0 +1,9 @@
+---
+step_ca_path: /etc/step-ca/ # noqa: var-naming[no-role-prefix]
+step_cert_renewal: true
+step_cert_renewal_restart_svc: true
+step_cert_list:
+  - name: "{{ ansible_fqdn }}"
+    subject: "{{ ansible_fqdn }}"
+    path: /etc/step/certs/
+    provisioner: "acme"

@@ -1,0 +1,28 @@
+---
+# https://smallstep.com/docs/step-ca/certificate-authority-server-production/#running-step-ca-as-a-daemons
+- name: Service | Create 'step' system account
+  ansible.builtin.user:
+    name: step
+    system: true
+    home: /etc/step-ca
+    shell: /bin/false
+
+- name: Service | Set CAP_NET_BIND_SERVICE on step-ca binary
+  community.general.capabilities:
+    path: /usr/bin/step-ca
+    capability: cap_net_bind_service=ep
+    state: present
+
+- name: Service | Set 'step' as owner of CA configuration directory
+  ansible.builtin.file:
+    path: "{{ step_ca_path }}"
+    recurse: true
+    owner: step
+    group: step
+
+- name: Service | Create systemd unit file
+  ansible.builtin.template:
+    src: step-ca.service.j2
+    dest: /etc/systemd/system/step-ca.service
+    mode: "0644"
+  notify: Enable step-ca

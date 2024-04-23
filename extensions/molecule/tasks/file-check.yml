@@ -1,0 +1,11 @@
+---
+- name: Test | Get File Info
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  register: file_info
+
+- name: Test | Check File - {{ item }}
+  ansible.builtin.assert:
+    that:
+      - file_info.stat.exists
+    quiet: true

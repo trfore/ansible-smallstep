@@ -1,0 +1,36 @@
+---
+- name: Certs | Check Required Variables
+  ansible.builtin.assert:
+    that: "{{ req_var }} is defined and {{ req_var }} | length > 0 and {{ req_var }} != None"
+    fail_msg: "{{ req_var }} needs to be set for the role to work"
+    success_msg: "{{ req_var }} is defined"
+    quiet: true
+  loop:
+    - item.name
+    - item.subject
+    - item.path
+    - item.provisioner
+  loop_control:
+    loop_var: req_var
+
+- name: Certs | Create Directory for Certificates
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "0755"
+
+- name: Certs | Request Certificate from CA Server
+  ansible.builtin.command: >-
+    step ca certificate
+    --provisioner {{ item.provisioner }}
+    {% if item.token is defined %}--token {{ item.token }}{% endif %}
+    {% if item.san_0 is defined %}--san {{ item.san_0 }}{% endif %}
+    {% if item.san_1 is defined %}--san {{ item.san_1 }}{% endif %}
+    {% if item.not_after is defined %}--san {{ item.not_after }}{% endif %}
+    {{ item.subject }}
+    {{ item.path }}{{ item.name }}.crt
+    {{ item.path }}{{ item.name }}.key
+  environment:
+    STEPPATH: "{{ step_ca_path }}"
+  args:
+    creates: "{{ item.path }}{{ item.name }}.crt"

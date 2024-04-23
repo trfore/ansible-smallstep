@@ -1,0 +1,34 @@
+---
+- name: Check for Step CLI
+  block:
+    - name: Check for step-cli Binary
+      ansible.builtin.shell: command -v step
+      register: step_cli_local_binary
+      ignore_errors: true
+      changed_when: step_cli_local_binary.rc != 0
+
+    - name: Install step-cli
+      ansible.builtin.include_role:
+        name: trfore.smallstep.step_cli
+      when:
+        - step_cli_local_binary.rc != 0
+
+- name: Check and Download Root CA Certificate
+  block:
+    - name: Check for CA Root Certificate
+      ansible.builtin.stat:
+        path: "{{ step_ca_path }}certs/root_ca.crt"
+      register: ca_root_certificate
+
+    - name: Bootstrap Step CA Root Certificate
+      ansible.builtin.include_role:
+        name: trfore.smallstep.step_ca_cert
+      when: not ca_root_certificate.stat.exists
+
+- name: Request Certificates
+  ansible.builtin.include_tasks: certs.yml
+  loop: "{{ step_cert_list }}"
+
+- name: Enable Certificate Renewal
+  ansible.builtin.include_tasks: "renewal.yml"
+  when: step_cert_renewal

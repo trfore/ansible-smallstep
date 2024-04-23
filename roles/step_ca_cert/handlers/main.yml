@@ -1,0 +1,12 @@
+---
+- name: Add Root CA to Trust Stores
+  ansible.builtin.command: >-
+    step certificate install
+    {% if step_ca_cert_firefox is true %}--firefox{% endif %}
+    {% if step_ca_cert_java is true %}--java{% endif %}
+    {{ step_ca_path }}certs/root_ca.crt
+  environment:
+    STEPPATH: "{{ step_ca_path }}"
+  register: cert_trust_store
+  changed_when: cert_trust_store.rc == 0
+  failed_when: cert_trust_store.rc == 1

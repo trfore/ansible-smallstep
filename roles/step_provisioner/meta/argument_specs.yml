@@ -1,0 +1,75 @@
+---
+argument_specs:
+  main:
+    short_description: Add provisioners to Step CA
+    description:
+      - Add provisioners to Step CA configuration.
+      - This role is intended to be run on a step CA server.
+    version_added: 1.0.0
+    options:
+      step_ca_path:
+        type: "path"
+        default: "/etc/step-ca/"
+        description: "Path to Step CA folder containing configuration and certificate files."
+
+      step_provisioner:
+        description: "List of dictionaries containing provisioners to add to Step CA."
+        type: "list"
+        elements: "dict"
+        default:
+          - name: "acme"
+            type: "acme"
+            ssh: false
+            renewal_after_expiry: false
+        options:
+          client_id:
+            type: "str"
+            description: "ID used to validate the audience in an OIDC token."
+
+          client_secret:
+            type: "str"
+            description: "Decret used to obtain the OIDC tokens."
+
+          config_endpoint:
+            type: "str"
+            description: "OIDC configuration URL."
+
+          domain:
+            type: "str"
+            description: "Domain used to validate the email claim in OIDC provisioner."
+
+          name:
+            type: "str"
+            required: true
+            description: "Name of the provisioner."
+
+          renewal_after_expiry:
+            type: "bool"
+            description: "Allow renewals for expired certificates."
+            default: false
+
+          ssh:
+            type: "bool"
+            description: "Enable provisioning of SSH certificates."
+
+          type:
+            type: "str"
+            choices:
+              - "acme"
+              - "oidc"
+              - "sshpop"
+              - "x5c"
+            required: true
+            description: "Type of provisioner to create."
+
+          x509_default_dur:
+            type: "str"
+            description: "Default duration, i.e. `72h`, for x509 certificate. Step will default to `24h`."
+
+          x509_max_dur:
+            type: "str"
+            description: "Max duration for x509 certificate."
+
+          x5c_root:
+            type: "path"
+            description: "Path to Root CA cert (PEM-formatted), e.g. `/etc/step-ca/certs/root_ca.crt`."

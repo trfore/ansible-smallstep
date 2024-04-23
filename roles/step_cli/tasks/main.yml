@@ -1,0 +1,63 @@
+---
+- name: Install Step CLI - Check Required Variables
+  ansible.builtin.assert:
+    that: "{{ req_var }} is defined and {{ req_var }} | length > 0 and {{ req_var }} != None"
+    fail_msg: "{{ req_var }} needs to be set for the role to work"
+    success_msg: "{{ req_var }} is defined"
+    quiet: true
+  loop:
+    - step_cli_version
+  loop_control:
+    loop_var: req_var
+
+- name: Get Latest Package SemVer
+  when: step_cli_version == 'latest'
+  become: false
+  delegate_to: localhost
+  run_once: true
+  block:
+    - name: Get SemVer from Github
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/smallstep/cli/releases/latest
+        body_format: json
+      register: __result
+      until: __result.status == 200
+      retries: 6
+      delay: 5
+
+    - name: Set Package SemVer
+      ansible.builtin.set_fact:
+        step_cli_version: '{{ __result.json.tag_name | regex_search("\d\d?\.\d\d?\.\d\d?") }}'
+
+- name: Check for step-cli binary
+  ansible.builtin.stat:
+    path: /usr/bin/step-cli
+  register: step_cli_local_binary
+
+- name: Downloading and installing step-cli
+  when: not step_cli_local_binary.stat.exists
+  block:
+    - name: Download step-cli Package
+      ansible.builtin.get_url:
+        url: "{{ step_cli_pkg_src }}"
+        dest: "/tmp/step-cli.{{ 'rpm' if ansible_os_family == 'RedHat' | default('deb') }}"
+        checksum: "{{ omit if (step_cli_checksum | length == 0) else ('sha256:' + step_cli_checksum) }}"
+        mode: "0644"
+      register: step_pkg
+
+    - name: Install step-cli (Debian)
+      ansible.builtin.apt:
+        deb: "{{ step_pkg.dest }}"
+      when: ansible_os_family == 'Debian'
+
+    - name: Install step-cli (RedHat)
+      ansible.builtin.yum:
+        name: "{{ step_pkg.dest }}"
+        disable_gpg_check: true
+        state: present
+      when: ansible_os_family == 'RedHat'
+  always:
+    - name: Remove step-cli Package
+      ansible.builtin.file:
+        path: "{{ step_pkg.dest }}"
+        state: absent

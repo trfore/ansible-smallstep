@@ -1,0 +1,78 @@
+---
+- name: Initialize | Check Required Variables
+  ansible.builtin.assert:
+    that: "{{ req_var }} is defined and {{ req_var }} | length > 0 and {{ req_var }} != None"
+    fail_msg: "{{ req_var }} needs to be set for the role to work"
+    success_msg: "{{ req_var }} is defined"
+    quiet: true
+  loop:
+    - ansible_fqdn
+    - ansible_default_ipv4.address
+    - step_ca_name
+    - step_ca_address
+    - step_ca_password
+    - step_ca_provisioner_password
+  loop_control:
+    loop_var: req_var
+  no_log: true
+
+- name: Initialize | Check for Step CLI
+  block:
+    - name: Initialize | Check for step-cli binary
+      ansible.builtin.shell: command -v step
+      register: step_cli_local_binary
+      ignore_errors: true
+      changed_when: step_cli_local_binary.rc != 0
+
+    - name: Initialize | Install step-cli
+      ansible.builtin.include_role:
+        name: trfore.smallstep.step_cli
+      when:
+        - step_cli_local_binary.rc != 0
+
+- name: Initialize | Create directory for step-ca
+  ansible.builtin.file:
+    path: "{{ step_ca_path }}"
+    state: directory
+    mode: "0755"
+
+- name: Initialize | Create certificate password file
+  ansible.builtin.template:
+    src: password.j2
+    dest: "{{ step_ca_path }}password.txt"
+    mode: "0600"
+  register: ca_password_file
+  no_log: true
+
+- name: Initialize | Create provisioner password file
+  ansible.builtin.template:
+    src: password-provisioner.j2
+    dest: "{{ step_ca_path }}password-provisioner.txt"
+    mode: "0600"
+  register: provisioner_password_file
+  no_log: true
+
+- name: Initialize | Initialize step-ca
+  ansible.builtin.shell: >
+    step ca init --deployment-type=standalone
+    {% if step_ca_root_cert is defined %}--root {{ step_ca_root_cert }}{% endif %}
+    {% if step_ca_root_key is defined %}--key {{ step_ca_root_key }}{% endif %}
+    {% if step_ca_root_key_password is defined %}--key-password-file {{ step_ca_root_key_password }}{% endif %}
+    {% if step_ca_ssh_mgmt is true %}--ssh{% endif %}
+    --name={{ step_ca_name }}
+    --dns={{ ansible_fqdn }}
+    --dns={{ ansible_default_ipv4.address }}
+    --address={{ step_ca_address }}
+    --provisioner={{ step_ca_name }}
+    --password-file={{ ca_password_file.dest }}
+    --provisioner-password-file={{ provisioner_password_file.dest }}
+
+    test -f {{ step_ca_path }}certs/intermediate_ca.crt && echo "created" || echo "not created"
+  environment:
+    STEPPATH: "{{ step_ca_path }}"
+  args:
+    creates: "{{ step_ca_path }}certs/intermediate_ca.crt"
+  register: step_ca_server
+  changed_when: step_ca_server.stdout == 'created'
+  failed_when: step_ca_server.stdout == 'not created'
+  no_log: true

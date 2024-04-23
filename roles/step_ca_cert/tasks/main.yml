@@ -1,0 +1,37 @@
+---
+- name: Check for CA Root Certificate
+  ansible.builtin.stat:
+    path: "{{ step_ca_path }}certs/root_ca.crt"
+  register: ca_root_certificate
+
+- name: Download Root CA Certificate
+  when: not ca_root_certificate.stat.exists
+  block:
+    - name: Check Required Variables
+      ansible.builtin.assert:
+        that: "{{ req_var }} is defined and {{ req_var }} | length > 0 and {{ req_var }} != None"
+        fail_msg: "{{ req_var }} needs to be set for the role to work"
+        success_msg: "{{ req_var }} is defined"
+        quiet: true
+      loop:
+        - step_ca_fingerprint
+        - step_ca_url
+      loop_control:
+        loop_var: req_var
+
+    - name: Create Directory for step-ca Root Cert
+      ansible.builtin.file:
+        path: "{{ step_ca_path }}"
+        state: directory
+        mode: "0755"
+
+    - name: Download Root Cert from CA Server
+      ansible.builtin.command: >-
+        step ca bootstrap
+        --ca-url={{ step_ca_url }}
+        --fingerprint={{ step_ca_fingerprint }}
+      environment:
+        STEPPATH: "{{ step_ca_path }}"
+      args:
+        creates: "{{ step_ca_path }}certs/root_ca.crt"
+      notify: Add Root CA to Trust Stores

@@ -1,0 +1,3 @@
+---
+step_ca_fingerprint: "" # noqa: var-naming[no-role-prefix]
+step_ca_url: "" # noqa: var-naming[no-role-prefix]

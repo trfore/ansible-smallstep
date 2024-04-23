@@ -1,0 +1,7 @@
+---
+step_ca_initialize: true
+step_ca_enable_service: true
+step_ca_name: "Example.com CA"
+step_ca_password: "{{ vault_step_ca_password }}"
+step_ca_provisioner_password: "{{ vault_step_ca_provisioner_password }}"
+step_ca_ssh_mgmt: true

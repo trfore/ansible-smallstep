@@ -1,0 +1,73 @@
+---
+- name: Install Step CA - Check Required Variables
+  ansible.builtin.assert:
+    that: "{{ req_var }} is defined and {{ req_var }} | length > 0 and {{ req_var }} != None"
+    fail_msg: "{{ req_var }} needs to be set for the role to work"
+    success_msg: "{{ req_var }} is defined"
+    quiet: true
+  loop:
+    - step_ca_version
+  loop_control:
+    loop_var: req_var
+
+- name: Get Latest Package SemVer
+  when: step_ca_version == 'latest'
+  become: false
+  delegate_to: localhost
+  run_once: true
+  block:
+    - name: Get SemVer from Github
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/smallstep/certificates/releases/latest
+        body_format: json
+      register: __result
+      until: __result.status == 200
+      retries: 6
+      delay: 5
+
+    - name: Set Package SemVer
+      ansible.builtin.set_fact:
+        step_ca_version: '{{ __result.json.tag_name | regex_search("\d\d?\.\d\d?\.\d\d?") }}'
+
+- name: Check for step-ca binary
+  ansible.builtin.stat:
+    path: /usr/bin/step-ca
+  register: step_local_binary
+
+- name: Downloading and installing step-ca
+  when: not step_local_binary.stat.exists
+  block:
+    - name: Download step-ca Package
+      ansible.builtin.get_url:
+        url: "{{ step_ca_pkg_src }}"
+        dest: "/tmp/step-ca.{{ 'rpm' if ansible_os_family == 'RedHat' | default('deb') }}"
+        checksum: "{{ omit if (step_ca_checksum | length == 0) else ('sha256:' + step_ca_checksum) }}"
+        mode: "0644"
+      register: step_pkg
+
+    - name: Install step-ca (Debian)
+      ansible.builtin.apt:
+        deb: "{{ step_pkg.dest }}"
+      when: ansible_os_family == 'Debian'
+
+    - name: Install step-ca (RedHat)
+      ansible.builtin.yum:
+        name: "{{ step_pkg.dest }}"
+        disable_gpg_check: true
+        state: present
+      when: ansible_os_family == 'RedHat'
+  always:
+    - name: Remove step-ca Package
+      ansible.builtin.file:
+        path: "{{ step_pkg.dest }}"
+        state: absent
+
+- name: Initialize step-ca
+  ansible.builtin.include_tasks: "initialize.yml"
+  when: step_ca_initialize
+
+- name: Configure step-ca as a service
+  ansible.builtin.include_tasks: "service.yml"
+  when:
+    - step_ca_initialize
+    - step_ca_enable_service

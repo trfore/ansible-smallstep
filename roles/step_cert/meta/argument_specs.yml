@@ -1,0 +1,81 @@
+# roles/step_cert/meta/argument_specs.yml
+---
+argument_specs:
+  main:
+    short_description: Request x509 certificates from the step CA server and automatically renew them
+    description:
+      - Request x509 certificates from the step CA server and automatically renew them.
+      - The systemd renewal timers will attempt to restart the service that matches the `step_cert_list.name`. Thus, it is important to name the certificate after the service, e.g. set `step_cert_list.name = docker` for the `docker.service`.
+    options:
+      step_ca_path:
+        type: "path"
+        default: "/etc/step-ca/"
+        description: "Step CA folder containing the CA configuration and root certificate."
+
+      step_cert_list:
+        description: "List of dictionaries, certificates to request from the Step CA server."
+        type: "list"
+        elements: "dict"
+        default:
+          - name: "{{ ansible_fqdn }}"
+            subject: "{{ ansible_fqdn }}"
+            path: /etc/step/certs/
+            provisioner: "acme"
+        options:
+          name:
+            type: "str"
+            default: "ansible_fqdn"
+            description: "Name for the local files - certificate, key, and systemd timer."
+
+          subject:
+            type: "str"
+            default: "ansible_fqdn"
+            description: "Common name, DNS name, or IP address that will be set as the subject for the certificate, e.g. `client01.example.com`."
+
+          path:
+            type: "path"
+            default: "/etc/step/certs/"
+            description: "Folder to store x509 certificate."
+
+          provisioner:
+            type: "str"
+            default: "acme"
+            description: "Name of provisioner to use."
+
+          not_after:
+            type: "str"
+            description: "Time (RFC 3339) or Duration, i.e. `24h`. Note: This value cannot exceed the provisioners max duration."
+
+          san_0:
+            type: "str"
+            default: "ansible_fqdn"
+            description: "Subject Alternative Name (SAN) for the x509 certificate, useful for setting the host IP in the x509 certificate."
+
+          san_1:
+            type: "str"
+            description: "Additional SAN for the x509 certificate."
+
+          token:
+            type: "str"
+            description: "One-time token used to authenticate with the CA."
+
+      step_cert_renewal:
+        type: "bool"
+        default: true
+        description: "Enable automatic renewal of certificate. Creates a systemd service and timer template, and configures `cert-renew@[step_cert_list.name].timer`."
+
+      step_cert_renewal_restart_svc:
+        type: "bool"
+        default: true
+        description: "Attempt to restart the service that matches the certificate name, `step_cert_list.name`."
+
+  certs:
+    short_description: Request x509 certificates from the step CA server
+    description:
+      - Request x509 certificates from the step CA server.
+
+  renewal:
+    short_description: Create systemd timers to renew x509 certificates
+    description:
+      - This creates two systemd templates, `cert-renewer@.service` and  `cert-renewer@.timer`.
+      - For each certificate, a timer is created `cert-renewer@[step_cert_list.name].timer`. On the client server, view all timers with `$ systemctl list-timers | grep cert-renewer`.

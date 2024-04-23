@@ -1,0 +1,2 @@
+---
+__pkg_extension: "{{ 'rpm' if ansible_os_family == 'RedHat' else 'deb' }}"

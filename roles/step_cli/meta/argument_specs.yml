@@ -1,0 +1,24 @@
+# roles/step_cli/meta/argument_specs.yml
+---
+argument_specs:
+  main:
+    short_description: Install Step CLI
+    description:
+      - Install step CLI, `step-cli`, for managing step CA servers and clients.
+      - Installs the binary at the default path, `/usr/bin/step-cli`.
+    version_added: 1.0.0
+    options:
+      step_cli_checksum:
+        type: "str"
+        default: "https://github.com/smallstep/cli/releases/download/v{{ step_cli_version }}/checksums.txt"
+        description: "URL to `step-cli` package checksum. If empty, the checksum is skipped."
+
+      step_cli_pkg_src:
+        type: "str"
+        default: "https://github.com/smallstep/cli/releases/download/v{{ step_cli_version }}/step-cli_{{ step_cli_version }}_amd64.{{ __pkg_extension }}"
+        description: "URL to `step-cli` package. Can be overridden in playbook when using a proxy."
+
+      step_cli_version:
+        type: "str"
+        default: "latest"
+        description: "SemVer of `step-cli` to install, e.g. `0.15.7`, defaults to the latest version."

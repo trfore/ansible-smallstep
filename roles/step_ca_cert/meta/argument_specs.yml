@@ -1,0 +1,33 @@
+# roles/step_ca_cert/meta/argument_specs.yml
+---
+argument_specs:
+  main:
+    short_description: Download and add the CA root certificate to trust stores
+    description:
+      - Download and add the CA root certificate into the system's trust store.
+      - Optionally, add it to Firefox and Java's trust stores.
+    options:
+      step_ca_cert_firefox:
+        type: "bool"
+        default: false
+        description: "Add CA root certificate to the Firefox NSS security database."
+
+      step_ca_cert_java:
+        type: "bool"
+        default: false
+        description: "Add CA root certificate to the Java key store."
+
+      step_ca_fingerprint:
+        type: "str"
+        required: true
+        description: "Fingerprint of the CA root certificate."
+
+      step_ca_path:
+        type: "path"
+        default: "/etc/step-ca/"
+        description: "Step CA folder containing the CA configuration and root certificate."
+
+      step_ca_url:
+        type: "str"
+        required: true
+        description: "URI of the step CA."

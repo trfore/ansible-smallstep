@@ -1,0 +1,36 @@
+---
+# tested via a proxy - 'non-production-molecule.yml'
+- name: Extract Root CA Information
+  hosts: "{{ target_ca | default('ca-server') }}"
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Get Root CA Fingerprint
+      ansible.builtin.command: step certificate fingerprint /etc/step-ca/certs/root_ca.crt
+      register: ca_fingerprint
+      changed_when: false
+      failed_when: ca_fingerprint.rc == 1
+
+- name: Setup Step CA Clients (Servers)
+  hosts: "{{ target_clients | default('ca_clients') }}"
+  become: true
+  gather_facts: true
+  roles:
+    - name: Install Step CLI
+      role: trfore.smallstep.step_cli
+
+    - name: Bootstrap Step CA Root Certificate
+      role: trfore.smallstep.step_ca_cert
+      vars:
+        step_ca_fingerprint: "{{ hostvars['ca-server'].ca_fingerprint.stdout }}" # noqa: var-naming[no-role-prefix]
+        step_ca_url: "https://ca.example.com" # noqa: var-naming[no-role-prefix]
+
+    - name: Request x509 Certificate
+      role: trfore.smallstep.step_cert
+      vars:
+        step_cert_list:
+          - name: "{{ ansible_fqdn }}"
+            subject: "{{ ansible_fqdn }}"
+            path: /etc/step/certs/
+            san_0: "{{ ansible_default_ipv4.address }}"
+            provisioner: "acme"

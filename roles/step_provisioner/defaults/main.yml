@@ -1,0 +1,7 @@
+---
+step_ca_path: /etc/step-ca/ # noqa: var-naming[no-role-prefix]
+step_provisioner: # noqa: var-naming[no-role-prefix]
+  - name: acme
+    type: acme
+    ssh: false
+    renewal_after_expiry: false

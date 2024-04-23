@@ -1,0 +1,17 @@
+---
+- name: Setup Step CA Server
+  hosts: "{{ target_ca | default('ca-server') }}"
+  become: true
+  gather_facts: true
+  vars_files:
+    - ca-vars.yml
+    - ca-provisioners.yml
+  roles:
+    - name: Install Step CLI
+      role: trfore.smallstep.step_cli
+
+    - name: Install Step Certificates
+      role: trfore.smallstep.step_ca
+
+    - name: Add Provisioners to Step CA
+      role: trfore.smallstep.step_provisioner

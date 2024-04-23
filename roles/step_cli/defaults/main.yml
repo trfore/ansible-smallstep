@@ -1,0 +1,4 @@
+---
+step_cli_checksum: "https://github.com/smallstep/cli/releases/download/v{{ step_cli_version }}/checksums.txt"
+step_cli_pkg_src: "https://github.com/smallstep/cli/releases/download/v{{ step_cli_version }}/step-cli_{{ step_cli_version }}_amd64.{{ __pkg_extension }}"
+step_cli_version: "latest"

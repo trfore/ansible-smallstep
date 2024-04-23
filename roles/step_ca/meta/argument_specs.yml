@@ -1,0 +1,96 @@
+# roles/step_ca/meta/argument_specs.yml
+---
+argument_specs:
+  main:
+    short_description: Install Step Certificates
+    description:
+      - Install step CA, `step-ca`, for generating SSL/TLS certificates.
+    version_added: 1.0.0
+    options:
+      step_ca_checksum:
+        type: "str"
+        default: "https://github.com/smallstep/certificates/releases/download/v{{ step_ca_version }}/checksums.txt"
+        description: "URL to `step-ca` package checksum. If empty, the checksum is skipped."
+
+      step_ca_initialize:
+        type: "bool"
+        default: false
+        description: "Initialize a public key infrastructure (PKI) to be used by the CA."
+
+      step_ca_enable_service:
+        type: "bool"
+        default: false
+        description: "Create systemd service for `step-ca`."
+
+      step_ca_pkg_src:
+        type: "str"
+        default: "https://github.com/smallstep/certificates/releases/download/v{{ step_ca_version }}/step-ca_{{ step_ca_version }}_amd64.{{ __pkg_extension }}"
+        description: "URL to `step-ca` package. Can be overridden in playbook when using a proxy."
+
+      step_ca_version:
+        type: "str"
+        default: "latest"
+        description: "SemVer of `step-ca` to install, e.g. `0.15.7`, defaults to the latest version."
+
+  initialize:
+    short_description: Initializes a public key infrastructure (PKI) to be used by step CA
+    description:
+      - This will initialize the a PKI to be used by step CA.
+      - The default initialization values are for non-production use only, as it will generate the PKI on the local disk at `/etc/step-ca/`.
+        This path is assigned using the `step_ca_path` variable. Additionally, it will create two password files, `/etc/step-ca/password.txt`
+        and `/etc/step-ca/password-provisioner.txt`, that are read-write only by the system-user `step`.
+      - Sensitive values are masked from ansible log, however, it is important to store these values using a form of encryption, e.g. ansible-vault.
+      - It is possible to productionize this role and initialize the PKI on a removable usb-drive; followed by a custom ansible task to move the keys
+        to a security device, such as Yubikey. However, this is beyond the scope of the role and collection.
+    options:
+      step_ca_path:
+        type: "path"
+        default: "/etc/step-ca/"
+        description: "Path to Step CA folder containing configuration and certificate files."
+
+      step_ca_name:
+        type: "str"
+        required: true
+        description: "Name of the public key infrastructure (PKI)."
+
+      step_ca_address:
+        type: "str"
+        default: ":443"
+        description: "Address the CA will listen at."
+
+      step_ca_password:
+        type: "str"
+        required: true
+        description: "Password to encrypt the root and intermediate keys."
+
+      step_ca_provisioner_password:
+        type: "str"
+        required: true
+        description: "Password for default JWK provisioner."
+
+      step_ca_root_cert:
+        type: "path"
+        description: "Path to existing PEM file to be used as the root CA."
+
+      step_ca_root_key:
+        type: "path"
+        description: "Path to key file for the existing PEM certificate."
+
+      step_ca_root_key_password:
+        type: "path"
+        description: "Path to file with decryption password for the existing PEM certificate key."
+
+      step_ca_ssh_mgmt:
+        type: "bool"
+        default: false
+        description: "Enable Step CA SSH certificate management."
+
+  service:
+    short_description: Create systemd service for `step-ca`
+    description:
+      - Creates systemd unit file, `step-ca.service`, and enables the service.
+    options:
+      step_ca_path:
+        type: "path"
+        default: "/etc/step-ca/"
+        description: "Path to Step CA folder containing configuration and certificate files."

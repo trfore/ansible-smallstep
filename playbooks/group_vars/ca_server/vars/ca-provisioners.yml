@@ -1,0 +1,21 @@
+---
+step_provisioner:
+  - name: acme
+    type: acme
+    renewal_after_expiry: true
+    x509_default_dur: "48h"
+    x509_max_dur: "168h"
+  - name: google
+    type: oidc
+    ssh: true
+    client_id: "{{ vault_oidc_client_id }}" # From GCP API Config
+    client_secret: "{{ vault_oidc_client_secret }}" # From GCP API Config
+    config_endpoint: "https://accounts.google.com/.well-known/openid-configuration"
+    domain: "gmail.com"
+  - name: sshpop
+    type: sshpop
+    ssh: true
+  - name: x5c
+    type: x5c
+    ssh: true
+    x5c_root: "/etc/step-ca/certs/root_ca.crt"

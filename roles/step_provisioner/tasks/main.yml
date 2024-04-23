@@ -1,0 +1,49 @@
+---
+- name: Check that step_provisioner is a list of dictionaries
+  block:
+    - name: Check that step_provisioner is a list
+      ansible.builtin.assert:
+        that: "{{ step_provisioner | type_debug == 'list' }}"
+        fail_msg: "{{ step_provisioner }} needs to be a list of dictionaries"
+        success_msg: "{{ step_provisioner }} is a list"
+        quiet: true
+
+    - name: Check that step_provisioner is a list of dictionaries
+      ansible.builtin.assert:
+        that: "{{ item | type_debug == 'dict' }}"
+        fail_msg: "{{ item }} needs to be a list of dictionaries"
+        quiet: true
+      loop: "{{ step_provisioner }}"
+      no_log: true
+
+- name: Get step-ca configuration
+  ansible.builtin.slurp:
+    src: "{{ step_ca_path }}config/ca.json"
+  register: ca_config
+
+- name: Get provisioners from step-ca config
+  ansible.builtin.set_fact:
+    provisioners: "{{ ca_config['content'] | b64decode | from_json | json_query(jmesquery) }}"
+  vars:
+    jmesquery: "authority.provisioners[*].type"
+
+- name: Add provisioner to step-ca
+  when: item.type|lower not in provisioners|lower
+  ansible.builtin.command: >-
+    step ca provisioner add {{ item.name }}
+    --type {{ item.type }}
+    {% if item.ssh is true %}--ssh{% endif %}
+    {% if item.renewal_after_expiry is true %}--allow-renewal-after-expiry{% endif %}
+    {% if item.x509_default_dur is defined %}--x509-default-dur {{ item.x509_default_dur }}{% endif %}
+    {% if item.client_id is defined %}--client-id {{ item.client_id }}{% endif %}
+    {% if item.client_secret is defined %}--client-secret {{ item.client_secret }}{% endif %}
+    {% if item.config_endpoint is defined %}--configuration-endpoint {{ item.config_endpoint }}{% endif %}
+    {% if item.domain is defined %}--domain {{ item.domain }}{% endif %}
+    {% if item.x5c_root is defined %}--x5c-root {{ item.x5c_root }}{% endif %}
+  environment:
+    STEPPATH: "{{ step_ca_path }}"
+  loop: "{{ step_provisioner }}"
+  register: step_ca_add_provisioner
+  changed_when: step_ca_add_provisioner.rc == 0
+  no_log: true
+  notify: Restart step-ca

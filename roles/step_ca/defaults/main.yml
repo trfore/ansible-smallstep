@@ -1,0 +1,14 @@
+---
+step_ca_checksum: "https://github.com/smallstep/certificates/releases/download/v{{ step_ca_version }}/checksums.txt"
+step_ca_pkg_src: "https://github.com/smallstep/certificates/releases/download/v{{ step_ca_version }}/step-ca_{{ step_ca_version }}_amd64.{{ __pkg_extension }}"
+step_ca_version: "latest"
+
+# CA Initialize Values
+step_ca_initialize: false
+step_ca_enable_service: false
+step_ca_path: /etc/step-ca/
+step_ca_address: ":443"
+step_ca_name: "" # Required
+step_ca_password: "" # Required
+step_ca_provisioner_password: "" # Required
+step_ca_ssh_mgmt: false

@@ -1,0 +1,18 @@
+---
+- name: Test Client
+  hosts: ca_clients
+  gather_facts: false
+  tasks:
+    - name: Check for systemd Timers
+      ansible.builtin.include_tasks: ../tasks/service-check.yml
+      loop:
+        - cert-renewer@{{ inventory_hostname }}.timer
+        - cert-renewer@example.timer
+
+    - name: Check for Files
+      ansible.builtin.include_tasks: ../tasks/file-check.yml
+      loop:
+        - /etc/step/certs/{{ inventory_hostname }}.crt
+        - /etc/step/certs/{{ inventory_hostname }}.key
+        - /etc/pki/example.local/example.crt
+        - /etc/pki/example.local/example.key
