@@ -8,6 +8,8 @@ repos:
         args: [--allow-multiple-documents]
       - id: debug-statements
       - id: end-of-file-fixer
+      - id: no-commit-to-branch
+        args: [--branch, main]
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
 
