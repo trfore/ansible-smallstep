@@ -4,6 +4,24 @@ trfore.smallstep Collection Release Notes
 
 .. contents:: Topics
 
+v1.1.0
+======
+
+Release Summary
+---------------
+
+New feature, request SSH certificates from step CA.
+
+Major Changes
+-------------
+
+- Added SSH role for generating SSH certificates.
+
+New Roles
+---------
+
+- trfore.smallstep.step_ssh - Request SSH Certificates from step CA Server
+
 v1.0.0
 ======
 
