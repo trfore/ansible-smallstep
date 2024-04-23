@@ -6,6 +6,11 @@
 - This collection is for setting up a a public key infrastructure (PKI) using Smallstep. It will install CA server and, optionally, configure the CA server and host servers ("clients") to request x509 certificates from the CA.
 - The default values for the collection are set with the intention of being used in production and **initializing the CA server offline, outside of an Ansible play**. However, you can set `step_ca_initialize: true` and initialize the PKI via an Ansible playbook, for more details see:
   - [`step_ca` readme](roles/step_ca/README.md) or [scenario guide: ca](https://trfore.github.io/ansible-smallstep/branch/main/docsite/guide_ca_nonproduction.html)
+- For client servers, the default argument values for the roles are designed for generating a single ACME certificate and automatically renewing it on each host. Yet, you can configure the roles to generate and request **SSH certificates** as well. See the example playbook below, READMEs and scenario guides for more details:
+  - [`step_cert` readme](roles/step_cert/README.md) or [scenario guide: client](https://trfore.github.io/ansible-smallstep/branch/main/docsite/guide_client.html)
+  -
+  - [`step_ssh` readme](roles/step_ssh/README.md) or [scenario guide: ssh](https://trfore.github.io/ansible-smallstep/branch/main/docsite/guide_ssh.html)
+- Additionally, you can request multiple certificates, using different provisioners, for a single server. See [`step_provisioner`](roles/step_provisioner/README.md) for details.
 
 ## Install the Collection
 
@@ -23,6 +28,7 @@ ansible-galaxy collection install trfore.smallstep
   - [`step_cert`](roles/step_cert/README.md) - Request an x509 certificate from the CA and automatically renew it
   - [`step_cli`](roles/step_cli/README.md) - Install Step CLI
   - [`step_provisioner`](roles/step_provisioner/README.md) - Add provisioners to Step CA
+  - [`step_ssh`](roles/step_ssh/README.md) - Generate SSH host certificate and configure server to accept user certificates
 
 ## Tested Platforms
 
@@ -147,6 +153,13 @@ ansible-galaxy collection install trfore.smallstep
 
     - name: Request x509 Certificate
       role: trfore.smallstep.step_cert
+
+    # For SSH certificates
+    - name: Configure Host for SSH Certificates
+      role: trfore.smallstep.step_ssh
+      vars:
+        step_ssh_provisioner: "Example.com" # JWK provisioner name extracted from 'Example.com CA'
+        step_ssh_provisioner_password: "password02" # Same value passed to 'step_provisioner_password', see 'step_ssh' README for details.
 ```
 
 ## Author and License Information
