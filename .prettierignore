@@ -1,0 +1,14 @@
+# environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# linted by antsibull-changelog
+./changelogs/changelog.yaml
+
+# linted by yamllint
+.pylintrc

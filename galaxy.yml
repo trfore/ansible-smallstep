@@ -1,0 +1,30 @@
+namespace: trfore
+name: smallstep
+version: 1.0.0
+readme: README.md
+authors:
+  - Taylor Fore (https://github.com/trfore/)
+description: Create a public key infrastructure (PKI) using Smallstep
+license_file: LICENSE
+tags: [networking, pki, security, smallstep, step, tls]
+dependencies:
+  "community.general": ">=4.0.0"
+repository: https://github.com/trfore/ansible-smallstep
+documentation: https://github.com/trfore/ansible-smallstep
+homepage: https://github.com/trfore/ansible-smallstep
+issues: https://github.com/trfore/ansible-smallstep/issues
+build_ignore:
+  - .gitignore
+  - .pre-commit-config.yaml
+  - .prettierignore
+  - .pylintrc
+  - .venv
+  - .vscode
+  - .yamllint
+  - CODE_OF_CONDUCT.md
+  - CONTRIBUTING.md
+  - MAINTAINERS
+  - tox-ansible.ini
+  - tox.ini
+  - changelogs/.plugin-cache.yaml
+  - requirements # dev and testing requirements
