@@ -28,6 +28,8 @@
   hosts: "{{ target_clients | default('ca_clients') }}"
   become: true
   gather_facts: true
+  vars_files:
+    - ssh-client-vars.yml
   roles:
     - name: Install Step CLI
       role: trfore.smallstep.step_cli
@@ -49,3 +51,6 @@
             path: /etc/step/certs/
             san_0: "{{ ansible_default_ipv4.address }}"
             provisioner: "acme"
+
+    - name: Configure Host for SSH Certificates
+      role: trfore.smallstep.step_ssh

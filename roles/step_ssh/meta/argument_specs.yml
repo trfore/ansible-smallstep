@@ -1,0 +1,43 @@
+# roles/step_ssh/meta/argument_specs.yml
+---
+argument_specs:
+  main:
+    short_description: Request SSH Certificate from step CA Server
+    description:
+      - This role will request an SSH host certificate from a step CA server and automatically renew it.
+      - It will use the default JWK provider for the initial request and the SSHPOP provider for renewal.
+      - SSH host certificates have a default expiration of 30 days, the renewal service is a systemd timer that checks on a daily basis (07:00 UTC / 02:00 EST ± 00:15) and renews when the certificate exceeds 66% of its lifetime.
+      - The role will also configure the host to accept user certificates.
+    version_added: 1.1.0
+    options:
+      step_ca_path:
+        type: "path"
+        default: "/etc/step-ca/"
+        description: "Step CA folder containing the CA configuration and root certificate."
+
+      step_ssh_key_pair_name:
+        type: "str"
+        default: "ssh_host_ecdsa_key"
+        description: "Name of the SSH key pair within `/etc/ssh/` to use for generating a certificate."
+
+      step_ssh_principal_0:
+        type: "str"
+        default: "ansible_fqdn"
+        description: "Primary principle to add the certificate, defaults to the to the FQDN of the host."
+
+      step_ssh_principal_1:
+        type: "str"
+        description: "Optional, additional principle to add the certificate, e.g. host name or IP address."
+
+      step_ssh_provisioner:
+        type: "str"
+        required: true
+        description: "The name of the provisioner to use. The default JWK provisioner is the first word in the CA name, i.e. `Example.com` in `Example.com CA`."
+
+      step_ssh_provisioner_password:
+        type: "str"
+        description: "Password for provisioner."
+
+      step_ssh_token:
+        type: "str"
+        description: "One-time token used to authenticate with the CA."

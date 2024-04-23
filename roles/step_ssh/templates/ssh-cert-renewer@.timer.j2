@@ -1,0 +1,12 @@
+[Unit]
+Description=Timer for SSH Host Certificate Renewal of %I
+PartOf=ssh-cert-renewer.target
+
+[Timer]
+Persistent=true
+OnCalendar=*-*-* 07:00:00
+AccuracySec=1us
+RandomizedDelaySec=15m
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,132 @@
+---
+- name: Check and Download Root CA Certificate
+  block:
+    - name: Check for CA Root Certificate
+      ansible.builtin.stat:
+        path: "{{ step_ca_path }}certs/root_ca.crt"
+      register: ca_root_certificate
+
+    - name: Bootstrap Step CA Root Certificate
+      ansible.builtin.include_role:
+        name: trfore.smallstep.step_ca_cert
+      when: not ca_root_certificate.stat.exists
+
+- name: Check Required Variables
+  ansible.builtin.assert:
+    that: "{{ req_var }} is defined and {{ req_var }} | length > 0 and {{ req_var }} != None"
+    fail_msg: "{{ req_var }} needs to be set for the role to work"
+    success_msg: "{{ req_var }} is defined"
+    quiet: true
+  loop:
+    - step_ca_path
+    - step_ssh_key_pair_name
+    - step_ssh_provisioner
+    - step_ssh_principal_0
+  loop_control:
+    loop_var: req_var
+
+- name: Download CA Public Key for Verifying USER Certificates
+  ansible.builtin.shell: >
+    step ssh config --roots > {{ step_ca_path }}certs/ssh_user_key.pub
+
+    test -f {{ step_ca_path }}certs/ssh_user_key.pub && echo "created" || echo "not created"
+  environment:
+    STEPPATH: "{{ step_ca_path }}"
+  args:
+    creates: "{{ step_ca_path }}certs/ssh_user_key.pub"
+  register: result
+  changed_when: result.stdout == 'created'
+  failed_when: result.stdout == 'not created'
+
+- name: Check for Required SSH Key Pair
+  block:
+    - name: Get SSH Key Status
+      ansible.builtin.stat:
+        path: /etc/ssh/{{ step_ssh_key_pair_name }}.pub
+      register: ssh_key_pair
+
+    - name: Check SSH Key Status
+      ansible.builtin.assert:
+        that: ssh_key_pair.stat.exists
+        fail_msg: "Missing SSH key pair in /etc/ssh"
+        quiet: true
+
+- name: Check for SSH HOST Certificate
+  ansible.builtin.stat:
+    path: /etc/ssh/{{ step_ssh_key_pair_name }}-cert.pub
+  register: ssh_host_certificate
+
+- name: Create SSH HOST Certificate - JWK Provisioner w/ Password
+  when:
+    - not ssh_host_certificate.stat.exists
+    - step_ssh_provisioner_password is defined
+  block:
+    - name: Install 'expect' Package
+      ansible.builtin.package:
+        name: expect
+        state: present
+      register: expect_install
+
+    - name: Request SSH HOST Certificate
+      ansible.builtin.shell: >
+        set timeout 10
+
+        spawn step ssh certificate {{ ansible_host }} /etc/ssh/{{ step_ssh_key_pair_name }}.pub
+        --host --host-id machine --sign
+        --provisioner {{ step_ssh_provisioner }}
+        {% if step_ssh_principal_0 is defined %}--principal {{ step_ssh_principal_0 }} {% endif %}
+        {% if step_ssh_principal_1 is defined %}--principal {{ step_ssh_principal_1 }} {% endif %}
+
+
+        expect "Please enter the password to decrypt the provisioner key: "
+
+        send -- "{{ step_ssh_provisioner_password }}\n"
+
+        expect eof
+      environment:
+        STEPPATH: "{{ step_ca_path }}"
+      args:
+        executable: /usr/bin/expect
+        creates: /etc/ssh/{{ step_ssh_key_pair_name }}-cert.pub
+      notify: Enable SSH Certificate Renewal
+      no_log: true
+
+  always:
+    - name: Remove `expect` Package if Installed by Task
+      ansible.builtin.package:
+        name: expect
+        state: absent
+      when: expect_install.changed # noqa: no-handler
+
+- name: Create SSH Host Certificate Using Token
+  when:
+    - not ssh_host_certificate.stat.exists
+    - step_ssh_token is defined
+  block:
+    - name: Request SSH HOST Certificate
+      ansible.builtin.command: >-
+        step ssh certificate $HOSTNAME /etc/ssh/{{ step_ssh_key_pair_name }}.pub
+        --host
+        --host-id machine
+        --sign
+        --provisioner {{ step_ssh_provisioner }}
+        {% if step_ssh_principal_0 is defined %}--principal {{ step_ssh_principal_0 }}{% endif %}
+        {% if step_ssh_principal_1 is defined %}--principal {{ step_ssh_principal_1 }}{% endif %}
+        {% if step_ssh_token is defined %}--token  {{ step_ssh_token }}{% endif %}
+      environment:
+        STEPPATH: "{{ step_ca_path }}"
+      args:
+        creates: /etc/ssh/{{ step_ssh_key_pair_name }}-cert.pub
+      notify: Enable SSH Certificate Renewal
+
+- name: Update sshd_config to Accept SSH Certificates From CA
+  ansible.builtin.blockinfile:
+    path: /etc/ssh/sshd_config
+    block: |
+      # Path to the CA public key for verifying user certificates
+      TrustedUserCAKeys {{ step_ca_path }}certs/ssh_user_key.pub
+
+      # Path to this host's private key and certificate
+      HostKey /etc/ssh/{{ step_ssh_key_pair_name }}
+      HostCertificate /etc/ssh/{{ step_ssh_key_pair_name }}-cert.pub
+  notify: Restart SSH

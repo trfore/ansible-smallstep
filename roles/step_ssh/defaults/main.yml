@@ -1,0 +1,8 @@
+---
+# ca root certificate variables
+step_ca_path: /etc/step-ca/ # noqa: var-naming[no-role-prefix]
+
+# ssh certificate variables
+step_ssh_key_pair_name: "ssh_host_ecdsa_key"
+step_ssh_provisioner: ""
+step_ssh_principal_0: "{{ ansible_fqdn }}"

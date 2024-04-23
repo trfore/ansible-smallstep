@@ -1,0 +1,42 @@
+---
+- name: Initialize Hosts
+  hosts: all
+  tasks:
+    - name: Update APT cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_os_family == 'Debian'
+      changed_when: false
+      delay: 4
+      retries: 5
+
+    - name: Install Essential Packages for HTTPS
+      ansible.builtin.apt:
+        name:
+          - gnupg
+          - ca-certificates
+          - apt-transport-https
+        state: present
+      when: ansible_distribution == 'Debian'
+
+    - name: Setup OpenSSH
+      block:
+        - name: Install OpenSSH
+          ansible.builtin.package:
+            name:
+              - openssh-server
+              - "{{ 'openssh-clients' if ansible_os_family == 'RedHat' else 'openssh-client' }}"
+
+        - name: Generate an OpenSSH keypair
+          community.crypto.openssh_keypair:
+            path: /etc/ssh/ssh_host_ecdsa_key
+            type: ecdsa
+
+- name: Deploy a Test CA Server and Host Client
+  ansible.builtin.import_playbook: ../../../playbooks/non-production-molecule.yml
+  vars:
+    step_ca_version: "{{ lookup('env', 'STEP_CA_VERSION') }}"
+    step_cli_version: "{{ lookup('env', 'STEP_CLI_VERSION') }}"
+    target_ca: "{{ lookup('env', 'TARGET_CA') }}"
+    target_clients: "{{ lookup('env', 'TARGET_CLIENTS') }}"
