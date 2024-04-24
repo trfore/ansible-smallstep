@@ -30,6 +30,7 @@ jobs:
         if: steps.step_release.outputs.current_tag != steps.step_release.outputs.release_tag
         uses: peter-evans/create-pull-request@v6
         with:
+          token: ${{ secrets.WORKFLOW_TOKEN }}
           commit-message: update step-ca and step-cli versions to ${{ steps.step_release.outputs.release_tag }}
           title: update step-ca and step-cli versions to ${{ steps.step_release.outputs.release_tag }}
           body: |
