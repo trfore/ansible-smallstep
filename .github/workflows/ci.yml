@@ -10,6 +10,7 @@ on:
       - "main"
     paths-ignore:
       - "README.md"
+      - "step.version"
   workflow_dispatch:
 
 jobs:
