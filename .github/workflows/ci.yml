@@ -6,8 +6,8 @@ concurrency:
 
 on:
   pull_request:
-    branches:
-      - "main"
+    branches-ignore:
+      - "update-step-version"
     paths-ignore:
       - "README.md"
   workflow_dispatch:
