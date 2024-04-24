@@ -22,6 +22,8 @@ provisioner:
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
   env:
+    STEP_CA_VERSION: ${STEP_CA_VERSION:-latest}
+    STEP_CLI_VERSION: ${STEP_CLI_VERSION:-latest}
     TARGET_CA: ${MOLECULE_NAME:-ca-server}
   config_options:
     defaults:
