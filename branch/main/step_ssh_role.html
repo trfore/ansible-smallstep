@@ -5,7 +5,7 @@
 <meta content="2.10.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>trfore.smallstep.step_cli role – Install Step CLI &mdash; trfore.smallstep  documentation</title>
+  <title>trfore.smallstep.step_ssh role – Request SSH Certificate from step CA Server &mdash; trfore.smallstep  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5707b69d" />
       <link rel="stylesheet" type="text/css" href="_static/css/ansible.css?v=c5b67dd2" />
       <link rel="stylesheet" type="text/css" href="_static/antsibull-minimal.css" />
@@ -24,8 +24,7 @@
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="trfore.smallstep.step_provisioner role – Add provisioners to Step CA" href="step_provisioner_role.html" />
-    <link rel="prev" title="trfore.smallstep.step_cert role – Request x509 certificates from the step CA server and automatically renew them" href="step_cert_role.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
+    <link rel="prev" title="trfore.smallstep.step_provisioner role – Add provisioners to Step CA" href="step_provisioner_role.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
 
 
 
@@ -84,8 +83,10 @@
 <li class="toctree-l1"><a class="reference internal" href="step_ca_role.html">trfore.smallstep.step_ca role – Install Step Certificates</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step_ca_cert_role.html">trfore.smallstep.step_ca_cert role – Download and add the CA root certificate to trust stores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step_cert_role.html">trfore.smallstep.step_cert role – Request x509 certificates from the step CA server and automatically renew them</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">trfore.smallstep.step_cli role – Install Step CLI</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#entry-point-main-install-step-cli">Entry point <code class="docutils literal notranslate"><span class="pre">main</span></code> – Install Step CLI</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="step_cli_role.html">trfore.smallstep.step_cli role – Install Step CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_provisioner_role.html">trfore.smallstep.step_provisioner role – Add provisioners to Step CA</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">trfore.smallstep.step_ssh role – Request SSH Certificate from step CA Server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#entry-point-main-request-ssh-certificate-from-step-ca-server">Entry point <code class="docutils literal notranslate"><span class="pre">main</span></code> – Request SSH Certificate from step CA Server</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#collection-links">Collection links</a></li>
@@ -95,8 +96,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="step_provisioner_role.html">trfore.smallstep.step_provisioner role – Add provisioners to Step CA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="step_ssh_role.html">trfore.smallstep.step_ssh role – Request SSH Certificate from step CA Server</a></li>
 </ul>
 <!-- extra nav elements for Ansible beyond RTD Sphinx Theme -->
 
@@ -114,10 +113,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">trfore.smallstep.step_cli role – Install Step CLI</li>
+      <li class="breadcrumb-item active">trfore.smallstep.step_ssh role – Request SSH Certificate from step CA Server</li>
       <li class="wy-breadcrumbs-aside">
               <!-- User defined GitHub URL -->
-              <a href="https://github.com/trfore/ansible-smallstep/edit/main/roles/step_cli/meta/argument_specs.yml?description=%23%23%23%23%23%20SUMMARY%0A%3C!—%20Your%20description%20here%20–%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/trfore/ansible-smallstep/edit/main/roles/step_ssh/meta/argument_specs.yml?description=%23%23%23%23%23%20SUMMARY%0A%3C!—%20Your%20description%20here%20–%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -127,19 +126,19 @@
   
            <div itemprop="articleBody">
              
-  <span class="target" id="ansible-collections-trfore-smallstep-step-cli-role"></span><section id="trfore-smallstep-step-cli-role-install-step-cli">
-<h1>trfore.smallstep.step_cli role – Install Step CLI<a class="headerlink" href="#trfore-smallstep-step-cli-role-install-step-cli" title="Link to this heading"></a></h1>
+  <span class="target" id="ansible-collections-trfore-smallstep-step-ssh-role"></span><section id="trfore-smallstep-step-ssh-role-request-ssh-certificate-from-step-ca-server">
+<h1>trfore.smallstep.step_ssh role – Request SSH Certificate from step CA Server<a class="headerlink" href="#trfore-smallstep-step-ssh-role-request-ssh-certificate-from-step-ca-server" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This role is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/trfore/smallstep/">trfore.smallstep collection</a> (version 1.1.0).</p>
 <p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
 To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">trfore.smallstep</span></code>.</p>
-<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">trfore.smallstep.step_cli</span></code>.</p>
+<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">trfore.smallstep.step_ssh</span></code>.</p>
 </div>
 <nav class="contents local" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#entry-point-main-install-step-cli" id="id1">Entry point <code class="docutils literal notranslate"><span class="pre">main</span></code> – Install Step CLI</a></p>
+<li><p><a class="reference internal" href="#entry-point-main-request-ssh-certificate-from-step-ca-server" id="id1">Entry point <code class="docutils literal notranslate"><span class="pre">main</span></code> – Request SSH Certificate from step CA Server</a></p>
 <ul>
 <li><p><a class="reference internal" href="#synopsis" id="id2">Synopsis</a></p></li>
 <li><p><a class="reference internal" href="#parameters" id="id3">Parameters</a></p></li>
@@ -147,14 +146,16 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </li>
 </ul>
 </nav>
-<section id="entry-point-main-install-step-cli">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">Entry point <code class="docutils literal notranslate"><span class="pre">main</span></code> – Install Step CLI</a><a class="headerlink" href="#entry-point-main-install-step-cli" title="Link to this heading"></a></h2>
-<p class="ansible-version-added">New in trfore.smallstep 1.0.0</p>
+<section id="entry-point-main-request-ssh-certificate-from-step-ca-server">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Entry point <code class="docutils literal notranslate"><span class="pre">main</span></code> – Request SSH Certificate from step CA Server</a><a class="headerlink" href="#entry-point-main-request-ssh-certificate-from-step-ca-server" title="Link to this heading"></a></h2>
+<p class="ansible-version-added">New in trfore.smallstep 1.1.0</p>
 <section id="synopsis">
 <h3><a class="toc-backref" href="#id2" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Install step CLI, `step-cli`, for managing step CA servers and clients.</p></li>
-<li><p>Installs the binary at the default path, `/usr/bin/step-cli`.</p></li>
+<li><p>This role will request an SSH host certificate from a step CA server and automatically renew it.</p></li>
+<li><p>It will use the default JWK provider for the initial request and the SSHPOP provider for renewal.</p></li>
+<li><p>SSH host certificates have a default expiration of 30 days, the renewal service is a systemd timer that checks on a daily basis (07:00 UTC / 02:00 EST ± 00:15) and renews when the certificate exceeds 66% of its lifetime.</p></li>
+<li><p>The role will also configure the host to accept user certificates.</p></li>
 </ul>
 </section>
 <section id="parameters">
@@ -167,27 +168,55 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-main--step_cli_checksum"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-cli-role-parameter-main-step-cli-checksum"><strong>step_cli_checksum</strong></p>
-<a class="ansibleOptionLink" href="#parameter-main--step_cli_checksum" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+<div class="ansibleOptionAnchor" id="parameter-main--step_ca_path"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ssh-role-parameter-main-step-ca-path"><strong>step_ca_path</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--step_ca_path" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">path</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>URL to `step-cli` package checksum. If empty, the checksum is skipped.</p>
-<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;https://github.com/smallstep/cli/releases/download/v{{</span> <span class="pre">step_cli_version</span> <span class="pre">}}/checksums.txt&quot;</span></code></p>
+<td><div class="ansible-option-cell"><p>Step CA folder containing the CA configuration and root certificate.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;/etc/step-ca/&quot;</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-main--step_cli_pkg_src"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-cli-role-parameter-main-step-cli-pkg-src"><strong>step_cli_pkg_src</strong></p>
-<a class="ansibleOptionLink" href="#parameter-main--step_cli_pkg_src" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+<div class="ansibleOptionAnchor" id="parameter-main--step_ssh_key_pair_name"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ssh-role-parameter-main-step-ssh-key-pair-name"><strong>step_ssh_key_pair_name</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--step_ssh_key_pair_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>URL to `step-cli` package. Can be overridden in playbook when using a proxy.</p>
-<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;https://github.com/smallstep/cli/releases/download/v{{</span> <span class="pre">step_cli_version</span> <span class="pre">}}/step-cli_{{</span> <span class="pre">step_cli_version</span> <span class="pre">}}_amd64.{{</span> <span class="pre">__pkg_extension</span> <span class="pre">}}&quot;</span></code></p>
+<td><div class="ansible-option-cell"><p>Name of the SSH key pair within `/etc/ssh/` to use for generating a certificate.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;ssh_host_ecdsa_key&quot;</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-main--step_cli_version"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-cli-role-parameter-main-step-cli-version"><strong>step_cli_version</strong></p>
-<a class="ansibleOptionLink" href="#parameter-main--step_cli_version" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+<div class="ansibleOptionAnchor" id="parameter-main--step_ssh_principal_0"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ssh-role-parameter-main-step-ssh-principal-0"><strong>step_ssh_principal_0</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--step_ssh_principal_0" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>SemVer of `step-cli` to install, e.g. `0.15.7`, defaults to the latest version.</p>
-<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code></p>
+<td><div class="ansible-option-cell"><p>Primary principle to add the certificate, defaults to the to the FQDN of the host.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;ansible_fqdn&quot;</span></code></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--step_ssh_principal_1"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ssh-role-parameter-main-step-ssh-principal-1"><strong>step_ssh_principal_1</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--step_ssh_principal_1" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Optional, additional principle to add the certificate, e.g. host name or IP address.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--step_ssh_provisioner"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ssh-role-parameter-main-step-ssh-provisioner"><strong>step_ssh_provisioner</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--step_ssh_provisioner" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The name of the provisioner to use. The default JWK provisioner is the first word in the CA name, i.e. `Example.com` in `Example.com CA`.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--step_ssh_provisioner_password"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ssh-role-parameter-main-step-ssh-provisioner-password"><strong>step_ssh_provisioner_password</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--step_ssh_provisioner_password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Password for provisioner.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--step_ssh_token"></div><p class="ansible-option-title" id="ansible-collections-trfore-smallstep-step-ssh-role-parameter-main-step-ssh-token"><strong>step_ssh_token</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--step_ssh_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>One-time token used to authenticate with the CA.</p>
 </div></td>
 </tr>
 </tbody>
@@ -211,8 +240,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
           
 
 <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="step_cert_role.html" class="btn btn-neutral float-left" title="trfore.smallstep.step_cert role – Request x509 certificates from the step CA server and automatically renew them" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="step_provisioner_role.html" class="btn btn-neutral float-right" title="trfore.smallstep.step_provisioner role – Add provisioners to Step CA" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="step_provisioner_role.html" class="btn btn-neutral float-left" title="trfore.smallstep.step_provisioner role – Add provisioners to Step CA" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
