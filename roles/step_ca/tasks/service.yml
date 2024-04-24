@@ -7,10 +7,11 @@
     home: /etc/step-ca
     shell: /bin/false
 
-- name: Service | Set CAP_NET_BIND_SERVICE on step-ca binary
+# For idempotence: use the cap operator '+' for Debian 10 and Ubuntu 20.04, other distros '='
+- name: Service | Set CAP_NET_BIND_SERVICE on step-ca Binary
   community.general.capabilities:
     path: /usr/bin/step-ca
-    capability: cap_net_bind_service=ep
+    capability: cap_net_bind_service{{ '+ep' if (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "10") or (ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version'] == "20") else '=ep' }}
     state: present
 
 - name: Service | Set 'step' as owner of CA configuration directory

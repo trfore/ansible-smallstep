@@ -28,3 +28,4 @@ build_ignore:
   - tox.ini
   - changelogs/.plugin-cache.yaml
   - requirements # dev and testing requirements
+  - step.version # only used in gh workflows

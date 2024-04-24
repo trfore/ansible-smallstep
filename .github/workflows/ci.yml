@@ -15,7 +15,7 @@ on:
 jobs:
   sanity:
     uses: ansible/ansible-content-actions/.github/workflows/sanity.yaml@main
-  molecule_test:
+  test:
     needs:
       - sanity
     strategy:
@@ -34,7 +34,7 @@ jobs:
           ]
         experimental: [false]
         molecule_scenario: ["-s default", "-s step_ssh"]
-    uses: trfore/ansible-role/.github/workflows/test_ansible.yml@main
+    uses: ./.github/workflows/test.yml
     with:
       distro: ${{ matrix.distro }}
       experimental: ${{ matrix.experimental }}
@@ -45,11 +45,11 @@ jobs:
     if: ${{ always() && (github.event_name != 'schedule') }}
     needs:
       - sanity
-      - molecule_test
+      - test
     runs-on: ubuntu-latest
     steps:
       - run: >-
           python -c "assert set([
           '${{ needs.sanity.result }}',
-          '${{ needs.molecule_test.result }}',
+          '${{ needs.test.result }}',
           ]) == {'success'}"
