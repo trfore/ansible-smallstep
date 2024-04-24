@@ -135,4 +135,5 @@ Additional Guides and References
 --------------------------------
 
 - :ref:`ansible_collections.trfore.smallstep.docsite.guide_ca_nonproduction`
+- :ref:`ansible_collections.trfore.smallstep.docsite.guide_ssh`
 - `GitHub: Example playbooks and group_vars <https://github.com/trfore/ansible-smallstep/blob/main/playbooks/>`_

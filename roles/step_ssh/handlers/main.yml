@@ -1,0 +1,52 @@
+---
+- name: Restart SSH
+  ansible.builtin.service:
+    name: "{{ 'ssh' if ansible_distribution == 'Ubuntu' else 'sshd' }}" # no sshd.service in ubuntu 24.04
+    state: restarted
+
+- name: Renewal | Get Provisioners From CA Server
+  become: true
+  ansible.builtin.command: step ca provisioner list
+  environment:
+    STEPPATH: "{{ step_ca_path }}"
+  register: step_ssh_ca_provisioners
+  changed_when: true
+  no_log: true
+  listen: Enable SSH Certificate Renewal
+
+- name: Renewal | Check for SSHPOP Provisioner
+  ansible.builtin.assert:
+    that: "{{ 'SSHPOP' in step_ssh_ca_provisioners.stdout | from_json | json_query(jmesquery) }}"
+    fail_msg: "SSHPOP provisioner not found, please add it to Step CA"
+    success_msg: "The SSHPOP provisioner is available"
+    quiet: true
+  vars:
+    jmesquery: "[].type"
+  listen: Enable SSH Certificate Renewal
+
+- name: Renewal | Create Service Template for ssh-cert-renewer
+  ansible.builtin.template:
+    src: ssh-cert-renewer@.service.j2
+    dest: /etc/systemd/system/ssh-cert-renewer@.service
+    owner: root
+    group: root
+    mode: "0644"
+  listen: Enable SSH Certificate Renewal
+
+- name: Renewal | Create Timer Template for ssh-cert-renewer
+  ansible.builtin.template:
+    src: ssh-cert-renewer@.timer.j2
+    dest: /etc/systemd/system/ssh-cert-renewer@.timer
+    owner: root
+    group: root
+    mode: "0644"
+  listen: Enable SSH Certificate Renewal
+
+- name: Renewal | Enable ssh-cert-renewer
+  become: true
+  ansible.builtin.systemd_service:
+    name: "ssh-cert-renewer@{{ step_ssh_key_pair_name }}.timer"
+    daemon_reload: true
+    enabled: true
+    state: started
+  listen: Enable SSH Certificate Renewal

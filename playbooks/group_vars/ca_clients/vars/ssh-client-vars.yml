@@ -1,0 +1,2 @@
+step_ssh_provisioner: "Example.com"
+step_ssh_provisioner_password: "{{ vault_step_ssh_provisioner_password }}"

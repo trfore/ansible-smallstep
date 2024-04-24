@@ -25,3 +25,17 @@ releases:
           name: step_provisioner
           namespace: null
     release_date: "2024-04-01"
+  1.1.0:
+    changes:
+      major_changes:
+        - Added support for CentOS 8 and Debian 10-12.
+        - Added SSH role for generating SSH certificates.
+      release_summary: New feature, request SSH certificates from step CA.
+    fragments:
+      - release_v1.1.0.yml
+    objects:
+      role:
+        - description: Request SSH Certificates from step CA Server
+          name: step_ssh
+          namespace: null
+    release_date: "2024-04-01"

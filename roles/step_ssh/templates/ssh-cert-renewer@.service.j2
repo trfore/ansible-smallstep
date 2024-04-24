@@ -1,0 +1,20 @@
+[Unit]
+Description=SSH Host Certificate Renewer for %I
+After=network-online.target
+StartLimitIntervalSec=0
+PartOf=ssh-cert-renewer.target
+AssertPathExists= /etc/ssh/%i-cert.pub
+
+[Service]
+Type=oneshot
+User=root
+
+Environment=STEPPATH={{ step_ca_path }} \
+            SSH_CERT_LOCATION=/etc/ssh/%i-cert.pub \
+            SSH_KEY_LOCATION=/etc/ssh/%i
+
+ExecCondition=/usr/bin/step ssh needs-renewal ${SSH_CERT_LOCATION}
+ExecStart=/usr/bin/step ssh renew --force ${SSH_CERT_LOCATION} ${SSH_KEY_LOCATION}
+
+[Install]
+WantedBy=multi-user.target

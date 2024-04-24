@@ -4,3 +4,4 @@ sections:
     toctree:
       - guide_ca_nonproduction
       - guide_client
+      - guide_ssh

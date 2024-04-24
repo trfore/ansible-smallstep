@@ -1,0 +1,79 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: ca-server-${MOLECULE_NAME:-01}
+    groups:
+      - ca_server
+    image: ${MOLECULE_IMAGE:-trfore/docker-ubuntu2204-systemd}
+    command: ${MOLECULE_COMMAND:-""}
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+    docker_networks:
+      - name: ${MOLECULE_NAME:-molecule.local}
+    networks:
+      - name: ${MOLECULE_NAME:-molecule.local}
+  - name: ca-client-${MOLECULE_NAME:-01}
+    groups:
+      - ca_clients
+    image: ${MOLECULE_IMAGE:-trfore/docker-ubuntu2204-systemd}
+    command: ${MOLECULE_COMMAND:-""}
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+    docker_networks:
+      - name: ${MOLECULE_NAME:-molecule.local}
+    networks:
+      - name: ${MOLECULE_NAME:-molecule.local}
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}
+  env:
+    STEP_CA_VERSION: ${MOLECULE_STEP_CA_VERSION:-"latest"}
+    STEP_CLI_VERSION: ${MOLECULE_STEP_CLI_VERSION:-"latest"}
+    TARGET_CA: ca-server-${MOLECULE_NAME:-01}
+    TARGET_CLIENTS: ca-client-${MOLECULE_NAME:-01}
+  config_options:
+    defaults:
+      vault_password_file: "${MOLECULE_SCENARIO_DIRECTORY}/vault-password.txt"
+  inventory:
+    links:
+      group_vars: ../../../playbooks/group_vars/
+verifier:
+  name: ansible
+scenario:
+  create_sequence:
+    - create
+  check_sequence:
+    - destroy
+    - create
+    - converge
+    - check
+    - destroy
+  converge_sequence:
+    - create
+    - converge
+  destroy_sequence:
+    - destroy
+  test_sequence:
+    - destroy
+    - syntax
+    - create
+    - converge
+    - idempotence
+    - verify
+    - destroy
