@@ -1,0 +1,50 @@
+name: Run Molecule Test
+on:
+  workflow_call:
+    inputs:
+      distro:
+        required: true
+        type: string
+      experimental:
+        default: false
+        required: false
+        type: boolean
+      molecule_glob:
+        default: "molecule/*/molecule.yml"
+        required: false
+        type: string
+      molecule_scenario:
+        default: "" # ex: "-s SCENARIO_NAME"
+        required: false
+        type: string
+      requirements_file:
+        default: "requirements.txt"
+        required: false
+        type: string
+jobs:
+  molecule:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ inputs.experimental }}
+    env:
+      PY_COLORS: "1"
+      ANSIBLE_FORCE_COLOR: "1"
+      MOLECULE_GLOB: ${{ inputs.molecule_glob }}
+      MOLECULE_NAME: ${{ inputs.distro }}
+      MOLECULE_IMAGE: trfore/docker-${{ inputs.distro }}-systemd
+    steps:
+      - name: Check out codebase
+        uses: actions/checkout@v4
+
+      - name: Setup python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: pip install -r ${{ inputs.requirements_file }}
+
+      - name: Run molecule test
+        run: |
+          export STEP_CA_VERSION=$(<step.version)
+          export STEP_CLI_VERSION=$(<step.version)
+          molecule test ${{ inputs.molecule_scenario }}
