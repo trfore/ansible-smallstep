@@ -8,7 +8,6 @@
   - [`step_ca` readme](roles/step_ca/README.md) or [scenario guide: ca](https://trfore.github.io/ansible-smallstep/branch/main/docsite/guide_ca_nonproduction.html)
 - For client servers, the default argument values for the roles are designed for generating a single ACME certificate and automatically renewing it on each host. Yet, you can configure the roles to generate and request **SSH certificates** as well. See the example playbook below, READMEs and scenario guides for more details:
   - [`step_cert` readme](roles/step_cert/README.md) or [scenario guide: client](https://trfore.github.io/ansible-smallstep/branch/main/docsite/guide_client.html)
-  -
   - [`step_ssh` readme](roles/step_ssh/README.md) or [scenario guide: ssh](https://trfore.github.io/ansible-smallstep/branch/main/docsite/guide_ssh.html)
 - Additionally, you can request multiple certificates, using different provisioners, for a single server. See [`step_provisioner`](roles/step_provisioner/README.md) for details.
 
