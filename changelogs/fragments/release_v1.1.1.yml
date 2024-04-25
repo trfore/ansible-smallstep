@@ -1,0 +1,6 @@
+release_summary: Adds files to improve development workflow; validates collection against step-ca & cli `0.26.1`
+trivial:
+  - Add tox files and contributor guide for local development.
+  - Add canary workflow to test collection against new step-ca and cli releases.
+  - Validated against step-ca and step-cli `0.26.1`.
+  - Updates CI workflows to avoid job overlap.
