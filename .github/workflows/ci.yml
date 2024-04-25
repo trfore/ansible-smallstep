@@ -9,7 +9,8 @@ on:
     branches:
       - "main"
     paths-ignore:
-      - "README.md"
+      - "docs/**"
+      - "**.md"
       - "step.version"
   workflow_dispatch:
 

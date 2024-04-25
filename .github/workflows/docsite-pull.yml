@@ -3,8 +3,10 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - "step.version"
+    paths:
+      - "docs/**"
+      - "plugins/modules/**"
+      - "roles/*/meta/**"
   workflow_dispatch:
 
 jobs:

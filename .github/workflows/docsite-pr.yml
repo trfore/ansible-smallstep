@@ -2,8 +2,10 @@ name: Collection Docsite (Pull Request)
 on:
   pull_request:
     types: [opened, synchronize, reopened, closed]
-    paths-ignore:
-      - "step.version"
+    paths:
+      - "docs/**"
+      - "plugins/modules/**"
+      - "roles/*/meta/**"
 
 env:
   GHP_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
