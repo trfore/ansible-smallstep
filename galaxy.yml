@@ -10,7 +10,7 @@ tags: [networking, pki, security, smallstep, step, tls]
 dependencies:
   "community.general": ">=4.0.0"
 repository: https://github.com/trfore/ansible-smallstep
-documentation: https://github.com/trfore/ansible-smallstep
+documentation: https://trfore.github.io/ansible-smallstep/branch/main/index.html
 homepage: https://github.com/trfore/ansible-smallstep
 issues: https://github.com/trfore/ansible-smallstep/issues
 build_ignore:
