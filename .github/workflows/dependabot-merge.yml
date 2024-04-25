@@ -1,6 +1,11 @@
 name: Dependabot Auto-Approve and Merge
 
-on: pull_request
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "requirements/**"
+      - "requirements.txt"
 
 permissions:
   contents: write
