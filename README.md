@@ -6,11 +6,10 @@
 
 - This collection is for setting up a a public key infrastructure (PKI) using Smallstep. It will install CA server and, optionally, configure the CA server and host servers ("clients") to request x509 certificates from the CA.
 - The default values for the collection are set with the intention of being used in production and **initializing the CA server offline, outside of an Ansible play**. However, you can set `step_ca_initialize: true` and initialize the PKI via an Ansible playbook, for more details see:
-  - [`step_ca` readme](roles/step_ca/README.md) or [scenario guide: ca](https://trfore.github.io/ansible-smallstep/branch/main/docsite/guide_ca_nonproduction.html)
-- For client servers, the default argument values for the roles are designed for generating a single ACME certificate and automatically renewing it on each host. Yet, you can configure the roles to generate and request **SSH certificates** as well. See the example playbook below, READMEs and scenario guides for more details:
-  - [`step_cert` readme](roles/step_cert/README.md) or [scenario guide: client](https://trfore.github.io/ansible-smallstep/branch/main/docsite/guide_client.html)
-  - [`step_ssh` readme](roles/step_ssh/README.md) or [scenario guide: ssh](https://trfore.github.io/ansible-smallstep/branch/main/docsite/guide_ssh.html)
-- Additionally, you can request multiple certificates, using different provisioners, for a single server. See [`step_provisioner`](roles/step_provisioner/README.md) for details.
+  - [`step_ca` readme](https://github.com/trfore/ansible-smallstep/tree/main/roles/step_ca/README.md) or [scenario guide: ca](https://trfore.github.io/ansible-smallstep/branch/main/docsite/guide_ca_nonproduction.html)
+- For client servers, the default argument values for the roles are designed for generating a single ACME certificate and automatically renew it on each host. Yet, you can configure the roles to generate and request multiple x509 certificates and **SSH certificates** as well. See the example playbook below, READMEs and scenario guides for more details:
+  - [`step_cert` readme](https://github.com/trfore/ansible-smallstep/tree/main/roles/step_cert/README.md) or [scenario guide: client](https://trfore.github.io/ansible-smallstep/branch/main/docsite/guide_client.html)
+  - [`step_ssh` readme](https://github.com/trfore/ansible-smallstep/tree/main/roles/step_ssh/README.md) or [scenario guide: ssh](https://trfore.github.io/ansible-smallstep/branch/main/docsite/guide_ssh.html)
 
 ## Install the Collection
 
@@ -23,12 +22,12 @@ ansible-galaxy collection install trfore.smallstep
 ## Roles
 
 - Variables and default values are listed in each role's README and available at the documentation website: https://trfore.github.io/ansible-smallstep/branch/main
-  - [`step_ca`](roles/step_ca/README.md) - Install and Initialize Step CA
-  - [`step_ca_cert`](roles/step_ca_cert/README.md) - Download and add the CA root certificate to trust stores
-  - [`step_cert`](roles/step_cert/README.md) - Request an x509 certificate from the CA and automatically renew it
-  - [`step_cli`](roles/step_cli/README.md) - Install Step CLI
-  - [`step_provisioner`](roles/step_provisioner/README.md) - Add provisioners to Step CA
-  - [`step_ssh`](roles/step_ssh/README.md) - Generate SSH host certificate and configure server to accept user certificates
+  - [`step_ca`](https://github.com/trfore/ansible-smallstep/tree/main/roles/step_ca) - Install and Initialize Step CA
+  - [`step_ca_cert`](https://github.com/trfore/ansible-smallstep/tree/main/roles/step_ca_cert) - Download and add the CA root certificate to trust stores
+  - [`step_cert`](https://github.com/trfore/ansible-smallstep/tree/main/roles/step_cert) - Request an x509 certificate from the CA and automatically renew it
+  - [`step_cli`](https://github.com/trfore/ansible-smallstep/tree/main/roles/step_cli) - Install Step CLI
+  - [`step_provisioner`](https://github.com/trfore/ansible-smallstep/tree/main/roles/step_provisioner) - Add provisioners to Step CA
+  - [`step_ssh`](https://github.com/trfore/ansible-smallstep/tree/main/roles/step_ssh) - Generate SSH host certificate and configure server to accept user certificates
 
 ## Tested Platforms
 
