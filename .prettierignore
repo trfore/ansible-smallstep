@@ -8,7 +8,7 @@ env.bak/
 venv.bak/
 
 # linted by antsibull-changelog
-./changelogs/changelog.yaml
+changelogs/changelog.yaml
 
 # linted by yamllint
 .pylintrc

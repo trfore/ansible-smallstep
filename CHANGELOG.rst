@@ -4,6 +4,14 @@ trfore.smallstep Collection Release Notes
 
 .. contents:: Topics
 
+v1.1.1
+======
+
+Release Summary
+---------------
+
+Adds files to improve development workflow; validates collection against step-ca & cli `0.26.1`
+
 v1.1.0
 ======
 
@@ -16,6 +24,7 @@ Major Changes
 -------------
 
 - Added SSH role for generating SSH certificates.
+- Added support for CentOS 8-9 and Debian 10-12.
 
 New Roles
 ---------
