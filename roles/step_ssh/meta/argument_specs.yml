@@ -6,7 +6,8 @@ argument_specs:
     description:
       - This role will request an SSH host certificate from a step CA server and automatically renew it.
       - It will use the default JWK provider for the initial request and the SSHPOP provider for renewal.
-      - SSH host certificates have a default expiration of 30 days, the renewal service is a systemd timer that checks on a daily basis (07:00 UTC / 02:00 EST ± 00:15) and renews when the certificate exceeds 66% of its lifetime.
+      - SSH host certificates have a default expiration of 30 days, the renewal service is a systemd timer that checks on a daily basis
+        (07:00 UTC / 02:00 EST ± 00:15) and renews when the certificate exceeds 66% of its lifetime.
       - The role will also configure the host to accept user certificates.
     version_added: 1.1.0
     options:

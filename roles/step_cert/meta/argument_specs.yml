@@ -5,13 +5,26 @@ argument_specs:
     short_description: Request x509 certificates from the step CA server and automatically renew them
     description:
       - Request x509 certificates from the step CA server and automatically renew them.
-      - The systemd renewal timers will attempt to restart the service that matches the `step_cert_list.name`. Thus, it is important to name the certificate after the service, e.g. set `step_cert_list.name = docker` for the `docker.service`.
+      - The systemd renewal timers will attempt to restart the service that matches the `step_cert_list.name`. Thus, it is important to name the certificate
+        after the service, e.g. set `step_cert_list.name = docker` for the `docker.service`.
     options:
       step_ca_path:
         type: "path"
         default: "/etc/step-ca/"
-        description: "Step CA folder containing the CA configuration and root certificate."
+        description:
+          - "Step CA folder containing the CA configuration and root certificate."
 
+      step_cert_renewal:
+        type: "bool"
+        default: true
+        description:
+          - "Enable automatic renewal of certificate. Creates a systemd service and timer template, and configures `cert-renew@[step_cert_list.name].timer`."
+
+  certs:
+    short_description: Request x509 certificates from the step CA server
+    description:
+      - Request x509 certificates from the step CA server.
+    options:
       step_cert_list:
         description: "List of dictionaries, certificates to request from the Step CA server."
         type: "list"
@@ -59,23 +72,14 @@ argument_specs:
             type: "str"
             description: "One-time token used to authenticate with the CA."
 
-      step_cert_renewal:
-        type: "bool"
-        default: true
-        description: "Enable automatic renewal of certificate. Creates a systemd service and timer template, and configures `cert-renew@[step_cert_list.name].timer`."
-
-      step_cert_renewal_restart_svc:
-        type: "bool"
-        default: true
-        description: "Attempt to restart the service that matches the certificate name, `step_cert_list.name`."
-
-  certs:
-    short_description: Request x509 certificates from the step CA server
-    description:
-      - Request x509 certificates from the step CA server.
-
   renewal:
     short_description: Create systemd timers to renew x509 certificates
     description:
       - This creates two systemd templates, `cert-renewer@.service` and  `cert-renewer@.timer`.
-      - For each certificate, a timer is created `cert-renewer@[step_cert_list.name].timer`. On the client server, view all timers with `$ systemctl list-timers | grep cert-renewer`.
+      - For each certificate, a timer is created `cert-renewer@[step_cert_list.name].timer`. On the client server, view all timers
+        with `$ systemctl list-timers | grep cert-renewer`.
+    options:
+      step_cert_renewal_restart_svc:
+        type: "bool"
+        default: true
+        description: "Attempt to restart the service that matches the certificate name, `step_cert_list.name`."

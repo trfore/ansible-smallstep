@@ -34,7 +34,7 @@
             state: directory
             owner: root
             group: root
-            mode: 0700
+            mode: "0700"
 
         - name: Create private key with password protection
           community.crypto.openssl_privatekey:
@@ -77,7 +77,7 @@
             dest: /root/ca/ca_root_cert.txt
             owner: root
             group: root
-            mode: 0700
+            mode: "0700"
 
   roles:
     - name: Install Step Certificates
