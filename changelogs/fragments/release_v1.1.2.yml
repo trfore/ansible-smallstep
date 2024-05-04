@@ -1,0 +1,4 @@
+trivial:
+  - Add ansible-lint config file
+  - Style updates to align with new style and lint configurations
+  - Update canary workflow (step.yml) to check for releases weekly
