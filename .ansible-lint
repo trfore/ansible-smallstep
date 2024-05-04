@@ -1,0 +1,12 @@
+profile: production
+exclude_paths:
+  - .github/workflows/
+  - .tox/
+  - .venv/
+  - changelogs/changelog.yaml
+extra_vars:
+  target_ca: "ca-server"
+  target_clients: "ca_clients"
+warn_list:
+  - command-instead-of-shell
+  - yaml[line-length]
