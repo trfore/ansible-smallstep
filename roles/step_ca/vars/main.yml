@@ -1,2 +1,2 @@
 ---
-__pkg_extension: "{{ 'rpm' if ansible_os_family == 'RedHat' else 'deb' }}"
+__pkg_extension: "{{ 'rpm' if ansible_os_family == 'RedHat' else 'deb' }}" # noqa: var-naming[no-role-prefix]
