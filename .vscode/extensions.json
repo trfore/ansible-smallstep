@@ -1,7 +1,3 @@
 {
-  "recommendations": [
-    "esbenp.prettier-vscode",
-    "redhat.ansible",
-    "redhat.vscode-yaml"
-  ]
+  "recommendations": ["esbenp.prettier-vscode", "redhat.ansible", "redhat.vscode-yaml"]
 }

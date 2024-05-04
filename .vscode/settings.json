@@ -1,0 +1,32 @@
+{
+  "files.associations": {
+    "*.{yml,yaml}": "ansible"
+  },
+  "[ansible]": {
+    "editor.autoIndent": "advanced",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.detectIndentation": true,
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.quickSuggestions": {
+      "comments": true,
+      "other": true,
+      "strings": true
+    },
+    "editor.tabSize": 2,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true
+  },
+  "[markdown]": {
+    "editor.autoIndent": "advanced",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.detectIndentation": true,
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true
+  }
+}
