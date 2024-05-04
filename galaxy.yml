@@ -1,6 +1,6 @@
 namespace: trfore
 name: smallstep
-version: 1.1.1
+version: 1.1.2
 readme: README.md
 authors:
   - Taylor Fore (https://github.com/trfore/)
@@ -14,10 +14,13 @@ documentation: https://trfore.github.io/ansible-smallstep/branch/main/index.html
 homepage: https://github.com/trfore/ansible-smallstep
 issues: https://github.com/trfore/ansible-smallstep/issues
 build_ignore:
+  - .ansible-lint
   - .gitignore
   - .pre-commit-config.yaml
   - .prettierignore
+  - .prettierrc.yaml
   - .pylintrc
+  - .tox
   - .venv
   - .vscode
   - .yamllint
