@@ -1,13 +1,12 @@
 name: Release Check
-
-concurrency:
-  group: ${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
-
 on:
   pull_request:
     paths:
       - "step.version"
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   test:

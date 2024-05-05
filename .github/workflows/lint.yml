@@ -1,0 +1,30 @@
+name: Lint
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "**.md"
+      - "LICENSE"
+  push:
+    branches: ["*"]
+    paths:
+      - "**.md"
+      - "LICENSE"
+
+concurrency:
+  group: ${{ github.workflow}}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    uses: trfore/ansible-role/.github/workflows/format.yml@main
+
+  check:
+    needs:
+      - format
+    runs-on: ubuntu-latest
+    steps:
+      - run: >-
+          python -c "assert set([
+          '${{ needs.format.result }}',
+          ]) == {'success'}"
