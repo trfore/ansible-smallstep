@@ -1,9 +1,4 @@
 name: CI
-
-concurrency:
-  group: ${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
-
 on:
   pull_request:
     branches:
@@ -14,11 +9,29 @@ on:
       - "step.version"
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
+  format:
+    uses: trfore/ansible-role/.github/workflows/format.yml@main
+
+  lint:
+    needs:
+      - format
+    uses: trfore/ansible-role/.github/workflows/lint_ansible.yml@main
+
   sanity:
+    needs:
+      - format
+      - lint
     uses: ansible/ansible-content-actions/.github/workflows/sanity.yaml@main
+
   test:
     needs:
+      - format
+      - lint
       - sanity
     strategy:
       fail-fast: false
@@ -33,15 +46,20 @@ jobs:
       molecule_glob: "./extensions/molecule/*/molecule.yml"
       molecule_scenario: ${{ matrix.molecule_scenario }}
       requirements_file: "requirements/dev-requirements.txt"
+
   check:
     if: ${{ always() && (github.event_name != 'schedule') }}
     needs:
+      - format
+      - lint
       - sanity
       - test
     runs-on: ubuntu-latest
     steps:
       - run: >-
           python -c "assert set([
+          '${{ needs.format.result }}',
+          '${{ needs.lint.result }}',
           '${{ needs.sanity.result }}',
           '${{ needs.test.result }}',
           ]) == {'success'}"
