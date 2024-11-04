@@ -58,6 +58,7 @@ releases:
     changes:
       breaking_changes:
         - Remove testing support for CentOS 8 due to EOL.
+        - Remove testing support for Debian 10 due to EOL.
       bugfixes:
         - Pulling the latest smallstep CLI package, due to the GitHub tag not aligning
           with the package name.
