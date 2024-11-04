@@ -1,0 +1,9 @@
+release_summary: Fix installing Smallstep CLI > 0.27.2, add testing for Ansible 2.17, and remove testing/support for CentOS 8
+breaking_changes:
+  - Remove testing support for CentOS 8 due to EOL.
+bugfixes:
+  - Pulling the latest smallstep CLI package, due to the GitHub tag not aligning with the package name.
+trivial:
+  - Update tox to test Ansible 2.17.
+  - Unpin Ansible python pkgs as upstream repos are pinning and validating 'requests' pkg.
+  - Validate against step-ca and step-cli `0.27.4` to `0.28.0`.

@@ -4,6 +4,32 @@ trfore.smallstep Collection Release Notes
 
 .. contents:: Topics
 
+v1.2.0
+======
+
+Release Summary
+---------------
+
+Fix installing Smallstep CLI > 0.27.2, add testing for Ansible 2.17, and remove testing/support for CentOS 8
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- Remove testing support for CentOS 8 due to EOL.
+
+Bugfixes
+--------
+
+- Pulling the latest smallstep CLI package, due to the GitHub tag not aligning with the package name.
+
+v1.1.2
+======
+
+Release Summary
+---------------
+
+Improve development workflow with format/lint configs and GH workflows
+
 v1.1.1
 ======
 

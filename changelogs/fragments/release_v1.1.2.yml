@@ -1,3 +1,4 @@
+release_summary: Improve development workflow with format/lint configs and GH workflows
 trivial:
   - Add ansible-lint config file
   - Style updates to align with new style and lint configurations

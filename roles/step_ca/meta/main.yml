@@ -10,7 +10,7 @@ galaxy_info:
     - name: Debian
       versions: [buster, bullseye, bookworm]
     - name: EL
-      versions: ["8", "9"]
+      versions: ["9"]
     - name: Ubuntu
       versions: [focal, jammy, noble]
 

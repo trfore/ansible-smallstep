@@ -3,47 +3,66 @@ releases:
   1.0.0:
     changes:
       major_changes:
-      - Consolidated numerous step roles into a single collection.
+        - Consolidated numerous step roles into a single collection.
       release_summary: Initial collection release, deploy a PKI using Smallstep.
     fragments:
-    - release_v1.0.0.yml
+      - release_v1.0.0.yml
     objects:
       role:
-      - description: Install and Initialize Step CA
-        name: step_ca
-        namespace: null
-      - description: Download and add the CA root certificate to trust stores
-        name: step_ca_cert
-        namespace: null
-      - description: Request an x509 certificate from the CA and automatically renew
-          it
-        name: step_cert
-        namespace: null
-      - description: Install Step CLI
-        name: step_cli
-        namespace: null
-      - description: Add provisioners to Step CA
-        name: step_provisioner
-        namespace: null
-    release_date: '2024-04-01'
+        - description: Install and Initialize Step CA
+          name: step_ca
+          namespace: null
+        - description: Download and add the CA root certificate to trust stores
+          name: step_ca_cert
+          namespace: null
+        - description: Request an x509 certificate from the CA and automatically renew
+            it
+          name: step_cert
+          namespace: null
+        - description: Install Step CLI
+          name: step_cli
+          namespace: null
+        - description: Add provisioners to Step CA
+          name: step_provisioner
+          namespace: null
+    release_date: "2024-04-01"
   1.1.0:
     changes:
       major_changes:
-      - Added SSH role for generating SSH certificates.
-      - Added support for CentOS 8-9 and Debian 10-12.
+        - Added SSH role for generating SSH certificates.
+        - Added support for CentOS 8-9 and Debian 10-12.
       release_summary: New feature, request SSH certificates from step CA.
     fragments:
-    - release_v1.1.0.yml
+      - release_v1.1.0.yml
     objects:
       role:
-      - description: Request SSH Certificates from step CA Server
-        name: step_ssh
-        namespace: null
-    release_date: '2024-04-01'
+        - description: Request SSH Certificates from step CA Server
+          name: step_ssh
+          namespace: null
+    release_date: "2024-04-01"
   1.1.1:
     changes:
       release_summary: Adds files to improve development workflow; validates collection
         against step-ca & cli `0.26.1`
     fragments:
-    - release_v1.1.1.yml
-    release_date: '2024-04-25'
+      - release_v1.1.1.yml
+    release_date: "2024-04-25"
+  1.1.2:
+    changes:
+      release_summary: Improve development workflow with format/lint configs and GH
+        workflows
+    fragments:
+      - release_v1.1.2.yml
+    release_date: "2024-05-05"
+  1.2.0:
+    changes:
+      breaking_changes:
+        - Remove testing support for CentOS 8 due to EOL.
+      bugfixes:
+        - Pulling the latest smallstep CLI package, due to the GitHub tag not aligning
+          with the package name.
+      release_summary: Fix installing Smallstep CLI > 0.27.2, add testing for Ansible
+        2.17, and remove testing/support for CentOS 8
+    fragments:
+      - release_v1.2.0.yml
+    release_date: "2024-11-04"
