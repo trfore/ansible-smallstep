@@ -16,6 +16,7 @@ Breaking Changes / Porting Guide
 --------------------------------
 
 - Remove testing support for CentOS 8 due to EOL.
+- Remove testing support for Debian 10 due to EOL.
 
 Bugfixes
 --------
