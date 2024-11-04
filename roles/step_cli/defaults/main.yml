@@ -1,5 +1,6 @@
 ---
 step_cli_checksum: "https://github.com/smallstep/cli/releases/download/v{{ step_cli_version }}/checksums.txt"
-step_cli_pkg_name: "{% if step_cli_version > '0.27.2' %}{{ step_cli_version }}-1{% else %}{{ step_cli_version }}{% endif %}"
-step_cli_pkg_src: "https://github.com/smallstep/cli/releases/download/v{{ step_cli_version }}/step-cli_{{ step_cli_pkg_name }}_amd64.{{ __pkg_extension }}"
+step_cli_pkg_version: "{% if step_cli_version > '0.27.2' %}{{ step_cli_version }}-1{% else %}{{ step_cli_version }}{% endif %}"
+step_cli_pkg_name: "{% if step_cli_version > '0.27.2' and ansible_os_family == 'RedHat' %}step-cli-{{ step_cli_pkg_version }}.x86_64.{% else %}step-cli_{{ step_cli_pkg_version }}_amd64.{% endif %}"
+step_cli_pkg_src: "https://github.com/smallstep/cli/releases/download/v{{ step_cli_version }}/{{ step_cli_pkg_name }}{{ __pkg_extension }}"
 step_cli_version: "latest"
