@@ -1,6 +1,8 @@
 ---
 step_ca_checksum: "https://github.com/smallstep/certificates/releases/download/v{{ step_ca_version }}/checksums.txt"
 step_ca_pkg_version: "{% if step_ca_version > '0.28.0' %}{{ step_ca_version }}-1{% else %}{{ step_ca_version }}{% endif %}"
+step_ca_pkg_name: "{% if step_ca_version > '0.28.0' and ansible_os_family == 'RedHat' %}step-ca-{{ step_ca_pkg_version }}.x86_64.{% else %}step-ca_{{ step_ca_pkg_version }}_amd64.{% endif %}"
+step_ca_pkg_src: "https://github.com/smallstep/certificates/releases/download/v{{ step_ca_version }}/{{ step_ca_pkg_name }}{{ __pkg_extension }}"
 step_ca_version: "latest"
 
 # CA Initialize Values
