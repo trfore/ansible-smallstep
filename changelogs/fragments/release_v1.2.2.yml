@@ -1,0 +1,8 @@
+release_summary: Add testing for Ansible 2.18, and remove testing/support for Ubuntu 20.04
+breaking_changes:
+  - Remove testing support for Ubuntu 20 as it approaches EOL on 31 May 2025.
+bugfixes:
+  - Align tox dependencies with dev-requirements file to keep local molecule calls and tox testing at parity.
+trivial:
+  - Update tox test matrix to test Ansible 2.18.
+  - Pin Ansible python packages 'ansible-compat' and 'molecule', see issue 30.

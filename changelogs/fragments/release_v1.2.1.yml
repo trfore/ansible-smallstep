@@ -1,0 +1,3 @@
+release_summary: Fix installing Smallstep CA > 0.28.0
+bugfixes:
+  - Pulls the correct smallstep CA package for versions 0.28+, see issue 25

@@ -31,10 +31,10 @@ ansible-galaxy collection install trfore.smallstep
 
 ## Tested Platforms
 
-- `ansible-core` 2.15, 2.16 & 2.17
+- `ansible-core` 2.16, 2.17 & 2.18
 - CentOS Stream 9
 - Debian 11 & 12
-- Ubuntu 20.04, 22.04 & 24.04
+- Ubuntu 22.04 & 24.04
 
 ## Example Playbook
 
