@@ -45,6 +45,6 @@ jobs:
 
       - name: Run molecule test
         run: |
-          export STEP_CA_VERSION=$(<step.version)
-          export STEP_CLI_VERSION=$(<step.version)
+          export STEP_CA_VERSION=$(jq -r '.ca' step.version)
+          export STEP_CLI_VERSION=$(jq -r '.cli' step.version)
           molecule test ${{ inputs.molecule_scenario }}
