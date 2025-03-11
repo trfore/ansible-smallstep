@@ -8,9 +8,17 @@ updates:
     schedule:
       interval: "weekly"
       day: "sunday"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
 
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "sunday"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
