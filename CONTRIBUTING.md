@@ -30,7 +30,7 @@ pre-commit install
 
 - A local installation of [Docker](https://docs.docker.com/engine/installation/) is required to run the `molecule` test scenarios.
 - All `tox` environments are created within the project directory under `.tox`.
-- The collection is tested using the last three versions of `ansible-core` on a Ubuntu image. Additionally, the collection is tested using the latest `ansible-core` on CentOS and Debian.
+- The collection is tested using the currently supported versions `ansible-core` on a Ubuntu image. Additionally, the latest `ansible-core` version is tested on CentOS and Debian.
   - NOTE: Some molecule scenarios, `multiple_certs` and `step_ssh`, will generate a docker bridge network for each `tox` environment using the next available subnet, e.g. `172.18.0.0/16`. The default docker network is `172.17.0.0/16`.
 - Extensive code modifications that change how a playbook is written need to be accompanied by test, e.g. molecule scenario, that covers the changes. This will help avoid end-user frustration with faulty code examples in the documentation.
   - Follow best practices for creating playbooks and handling variables within `playbooks/`, but avoid encrypting files. This will keep encrypted files out of the collection build and avoid issues with [`ansible-lint` #2889](https://github.com/ansible/ansible-lint/issues/2889).
@@ -42,7 +42,7 @@ tox list
 # lint all files
 tox -e lint run
 # run a specific test environment
-tox -e py-ansible2.16-default run
+tox -e py-ansible2.17-default  run
 # run a group of tests, e.g. the default molecule scenario
 tox -f default run
 # run all test in parallel
@@ -52,9 +52,13 @@ tox run-parallel
 - You can also pass environment variables to tox for: `MOLECULE_IMAGE`, `STEP_CA_VERSION`, and `STEP_CLI_VERSION`. When running multiple test, we highly recommend using `STEP_*_VERSION` variables to avoid hitting GitHub's API rate limiter.
 
 ```sh
-MOLECULE_IMAGE='trfore/docker-debian12-systemd' tox -e py-ansible2.16-default run
-STEP_CA_VERSION='0.26.0' STEP_CLI_VERSION='0.26.0' tox -e py-ansible2.16-default run
-# highly recommended
+# use a different docker image
+MOLECULE_IMAGE='trfore/docker-debian12-systemd' tox -e py-ansible2.17-default  run
+
+# test a specific version of Smallstep CA or CLI
+STEP_CA_VERSION='0.26.0' STEP_CLI_VERSION='0.26.0' tox -e py-ansible2.17-default  run
+
+# highly recommended for parallel runs to avoid API rate limit
 STEP_CA_VERSION='0.26.0' STEP_CLI_VERSION='0.26.0' tox run-parallel
 ```
 
@@ -62,14 +66,14 @@ STEP_CA_VERSION='0.26.0' STEP_CLI_VERSION='0.26.0' tox run-parallel
 
 ```sh
 # molecule converge
-tox -e py-ansible2.16-default run -- converge -s default
+tox -e py-ansible2.17-default  run -- converge -s default
 # molecule test w/o destroying the container
-tox -e py-ansible2.16-default run -- test -s default --destroy=never
+tox -e py-ansible2.17-default  run -- test -s default --destroy=never
 
 # exec into the container via tox
-tox -e py-ansible2.16-default run -- login -s default
+tox -e py-ansible2.17-default  run -- login -s default
 # exec into the container
-docker exec -it py-ansible2.16-default bash
+docker exec -it py-ansible2.17-default  bash
 
 # parallel testing
 tox -f default run-parallel -- test -s default --destroy=never
