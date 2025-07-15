@@ -43,6 +43,8 @@ ansible-galaxy collection install trfore.smallstep
 **NOTE**: For installs with numerous end-points (50+) or repetitive playbook testing, **we highly recommend using `STEP_*_VERSION` variables in your playbook**
 **to avoid hitting GitHub's API rate limiter** (60 unauthenticated request per hour).
 
+- Phase I: Create a step CA server.
+
 ```yaml
 - name: Setup Step CA Server
   hosts: ca-server
@@ -58,22 +60,7 @@ ansible-galaxy collection install trfore.smallstep
       role: trfore.smallstep.step_ca
       vars:
         step_ca_version: "0.28.4"
-```
 
-- Phase I: Create a step CA server.
-
-```yaml
----
-- name: Setup Step CA Server
-  hosts: ca-server
-  become: true
-  gather_facts: true
-  roles:
-    - name: Install Step CLI
-      role: trfore.smallstep.step_cli
-
-    - name: Install Step Certificates
-      role: trfore.smallstep.step_ca
 ### Initialize the CA Offline, storing the root key in an encrypted drive ###
 ```
 
