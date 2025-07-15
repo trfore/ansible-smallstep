@@ -60,7 +60,6 @@ ansible-galaxy collection install trfore.smallstep
       role: trfore.smallstep.step_ca
       vars:
         step_ca_version: "0.28.4"
-
 ### Initialize the CA Offline, storing the root key in an encrypted drive ###
 ```
 
