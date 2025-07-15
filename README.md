@@ -40,6 +40,26 @@ ansible-galaxy collection install trfore.smallstep
 
 ### Production Workflow
 
+**NOTE**: For installs with numerous end-points (50+) or repetitive playbook testing, **we highly recommend using `STEP_*_VERSION` variables in your playbook**
+**to avoid hitting GitHub's API rate limiter** (60 unauthenticated request per hour).
+
+```yaml
+- name: Setup Step CA Server
+  hosts: ca-server
+  become: true
+  gather_facts: true
+  roles:
+    - name: Install Step CLI
+      role: trfore.smallstep.step_cli
+      vars:
+        step_cli_version: "0.28.7"
+
+    - name: Install Step Certificates
+      role: trfore.smallstep.step_ca
+      vars:
+        step_ca_version: "0.28.4"
+```
+
 - Phase I: Create a step CA server.
 
 ```yaml

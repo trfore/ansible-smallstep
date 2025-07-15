@@ -49,7 +49,7 @@ tox -f default run
 tox run-parallel
 ```
 
-- You can also pass environment variables to tox for: `MOLECULE_IMAGE`, `STEP_CA_VERSION`, and `STEP_CLI_VERSION`. When running multiple test, we highly recommend using `STEP_*_VERSION` variables to avoid hitting GitHub's API rate limiter.
+- You can also pass environment variables to tox for: `MOLECULE_IMAGE`, `STEP_CA_VERSION`, and `STEP_CLI_VERSION`. **When running multiple test, we highly recommend using `STEP_*_VERSION` variables to avoid hitting GitHub's API rate limiter.**
 
 ```sh
 # use a different docker image
