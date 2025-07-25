@@ -22,3 +22,13 @@ def test_services(host):
 def test_tcp_sockets(host):
     socket = host.socket("tcp://127.0.0.1:443")
     assert socket.is_listening
+
+
+def test_step_ca_config_name(host):
+    assert host.file("/etc/step-ca/config/ca.json").contains("Example.com CA")
+
+
+def test_step_ca_cert_subj(host):
+    cmd = "openssl x509 -in /etc/step-ca/certs/root_ca.crt -noout -subject"
+    expected = "subject=O = Example.com CA, CN = Example.com CA Root CA"
+    assert host.check_output(cmd) == expected
