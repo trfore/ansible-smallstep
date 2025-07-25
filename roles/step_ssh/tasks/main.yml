@@ -73,7 +73,7 @@
 
         spawn step ssh certificate {{ ansible_host }} /etc/ssh/{{ step_ssh_key_pair_name }}.pub
         --host --host-id machine --sign
-        --provisioner {{ step_ssh_provisioner }}
+        --provisioner={{ step_ssh_provisioner | quote }}
         {% if step_ssh_principal_0 is defined %}--principal {{ step_ssh_principal_0 }} {% endif %}
         {% if step_ssh_principal_1 is defined %}--principal {{ step_ssh_principal_1 }} {% endif %}
 
@@ -109,7 +109,7 @@
         --host
         --host-id machine
         --sign
-        --provisioner {{ step_ssh_provisioner }}
+        --provisioner={{ step_ssh_provisioner | quote }}
         {% if step_ssh_principal_0 is defined %}--principal {{ step_ssh_principal_0 }}{% endif %}
         {% if step_ssh_principal_1 is defined %}--principal {{ step_ssh_principal_1 }}{% endif %}
         {% if step_ssh_token is defined %}--token  {{ step_ssh_token }}{% endif %}
