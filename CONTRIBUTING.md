@@ -56,10 +56,11 @@ tox run-parallel
 MOLECULE_IMAGE='trfore/docker-debian12-systemd' tox -e py-ansible2.17-default  run
 
 # test a specific version of Smallstep CA or CLI
-STEP_CA_VERSION='0.26.0' STEP_CLI_VERSION='0.26.0' tox -e py-ansible2.17-default  run
+STEP_CA_VERSION='0.28.4' STEP_CLI_VERSION='0.28.7' tox -e py-ansible2.17-default  run
+STEP_CA_VERSION='0.28.4' STEP_CLI_VERSION='0.28.7' tox -e py-ansible2.17-ssh  run
 
 # highly recommended for parallel runs to avoid API rate limit
-STEP_CA_VERSION='0.26.0' STEP_CLI_VERSION='0.26.0' tox run-parallel
+STEP_CA_VERSION='0.28.4' STEP_CLI_VERSION='0.28.7' tox run-parallel
 ```
 
 - For iterative development and testing, the tox molecule environments are written to accept `molecule` arguments. This allows for codebase changes to be tested as you write across multiple distros and versions of `ansible-core`.
@@ -67,8 +68,11 @@ STEP_CA_VERSION='0.26.0' STEP_CLI_VERSION='0.26.0' tox run-parallel
 ```sh
 # molecule converge
 tox -e py-ansible2.17-default  run -- converge -s default
+
 # molecule test w/o destroying the container
-tox -e py-ansible2.17-default  run -- test -s default --destroy=never
+# ex: tox -e TOX_ENV_NAME  run -- test -s MOLECULE_SCENARIO_NAME --destroy=never
+STEP_CA_VERSION='0.28.4' STEP_CLI_VERSION='0.28.7' tox -e py-ansible2.17-default  run -- test -s default --destroy=never
+STEP_CA_VERSION='0.28.4' STEP_CLI_VERSION='0.28.7' tox -e py-ansible2.17-ssh  run -- test -s step_ssh --destroy=never
 
 # exec into the container via tox
 tox -e py-ansible2.17-default  run -- login -s default

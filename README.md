@@ -163,13 +163,11 @@ ansible-galaxy collection install trfore.smallstep
     - name: Configure Host for SSH Certificates
       role: trfore.smallstep.step_ssh
       vars:
-        step_ssh_provisioner: "Example.com" # JWK provisioner name extracted from 'Example.com CA'
+        step_ssh_provisioner: "Example.com CA" # JWK provisioner name extracted from 'Example.com CA'
         step_ssh_provisioner_password: "password02" # Same value passed to 'step_provisioner_password', see 'step_ssh' README for details.
 ```
 
-## Author and License Information
-
-Taylor Fore (https://github.com/trfore)
+## License
 
 See LICENSE file for this Ansible collection.
 
@@ -178,6 +176,13 @@ Smallstep (`certificates` and `cli`) is Apache 2.0 license software from Smallst
 - https://smallstep.com/terms-of-use/
 - https://github.com/smallstep/certificates/blob/master/LICENSE
 - https://github.com/smallstep/cli/blob/master/LICENSE
+
+## Contributors
+
+- [trfore](https://github.com/trfore) - original author and maintainer
+
+Special thanks to all those who have [contributed to the project](https://github.com/trfore/ansible-smallstep/graphs/contributors)!
+Interested in adding a feature or fixing a bug? Checkout the [contributing guide](CONTRIBUTING.md).
 
 ## References
 
