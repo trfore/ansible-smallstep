@@ -59,11 +59,11 @@
     {% if step_ca_root_key is defined %}--key {{ step_ca_root_key }}{% endif %}
     {% if step_ca_root_key_password is defined %}--key-password-file {{ step_ca_root_key_password }}{% endif %}
     {% if step_ca_ssh_mgmt is true %}--ssh{% endif %}
-    --name={{ step_ca_name }}
+    --name={{ step_ca_name | quote }}
     --dns={{ ansible_fqdn }}
     --dns={{ ansible_default_ipv4.address }}
     --address={{ step_ca_address }}
-    --provisioner={{ step_ca_name }}
+    --provisioner={{ step_ca_name | quote }}
     --password-file={{ ca_password_file.dest }}
     --provisioner-password-file={{ provisioner_password_file.dest }}
 
