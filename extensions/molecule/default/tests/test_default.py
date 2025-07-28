@@ -28,6 +28,15 @@ def test_step_ca_config_name(host):
     assert host.file("/etc/step-ca/config/ca.json").contains("Example.com CA")
 
 
+def test_step_ca_config_provisioner_acme(host):
+    assert host.file("/etc/step-ca/config/ca.json").contains(
+        '"maxTLSCertDuration": "9552h0m0s"',
+    )
+    assert host.file("/etc/step-ca/config/ca.json").contains(
+        '"defaultTLSCertDuration": "2160h0m0s"',
+    )
+
+
 def test_step_ca_cert_subj(host):
     cmd = "openssl x509 -in /etc/step-ca/certs/root_ca.crt -noout -subject"
     expected = "subject=O = Example.com CA, CN = Example.com CA Root CA"
