@@ -15,3 +15,11 @@
 
     - name: Add Provisioners to Step CA
       role: trfore.smallstep.step_provisioner
+      vars:
+        step_provisioner: # noqa: var-naming[no-role-prefix]
+          - name: acme
+            type: acme
+            ssh: false
+            renewal_after_expiry: false
+            x509_default_dur: "2160h" # 90 days
+            x509_max_dur: "9552h" # 398 days
