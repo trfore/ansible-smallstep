@@ -35,6 +35,10 @@ def test_step_ca_config_provisioner_acme(host):
     assert host.file("/etc/step-ca/config/ca.json").contains(
         '"defaultTLSCertDuration": "2160h0m0s"',
     )
+    # sub optimal as value is set for multiple provisioners
+    assert host.file("/etc/step-ca/config/ca.json").contains(
+        '"allowRenewalAfterExpiry": false',
+    )
 
 
 def test_step_ca_cert_subj(host):
