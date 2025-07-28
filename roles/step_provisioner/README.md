@@ -25,13 +25,13 @@ step_provisioner:
 
 #### ACME Variables
 
-| Dictionary Key         | Default | Description                                                                             | Required | In-line Var Equivalent         |
-| ---------------------- | ------- | --------------------------------------------------------------------------------------- | -------- | ------------------------------ |
-| `name`                 |         | String, name of the provisioner.                                                        | Yes      |                                |
-| `type`                 |         | String, type of provisioner to create, set to: `acme`.                                  | Yes      | `--type`                       |
-| `renewal_after_expiry` | `false` | Allow renewals for expired certificates.                                                | No       | `--allow-renewal-after-expiry` |
-| `x509_default_dur`     |         | String, default duration, i.e. `72h`, for x509 certificate. Step will default to `24h`. | No       | `--x509-default-dur`           |
-| `x509_max_dur`         |         | String, max duration for x509 certificate.                                              | No       | `--x509-max-dur`               |
+| Dictionary Key         | Default | Description                                                                                          | Required | In-line Var Equivalent         |
+| ---------------------- | ------- | ---------------------------------------------------------------------------------------------------- | -------- | ------------------------------ |
+| `name`                 |         | String, name of the provisioner.                                                                     | Yes      |                                |
+| `type`                 |         | String, type of provisioner to create, set to: `acme`.                                               | Yes      | `--type`                       |
+| `renewal_after_expiry` | `false` | Allow renewals for expired certificates.                                                             | No       | `--allow-renewal-after-expiry` |
+| `x509_default_dur`     |         | String, default duration, i.e. `72h`, for x509 certificate. Step will default to `48h0m0s` (2 days). | No       | `--x509-default-dur`           |
+| `x509_max_dur`         |         | String, max duration for x509 certificate. Step will default to `168h0m0s` (7 days).                 | No       | `--x509-max-dur`               |
 
 #### OIDC Variables
 
