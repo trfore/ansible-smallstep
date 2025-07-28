@@ -18,7 +18,7 @@ step_provisioner:
   - name: acme
     type: acme
     ssh: false
-    renewal_after_expiry: true
+    renewal_after_expiry: false
 ```
 
 - **Warning**: The correct variables for each `type` of provisioner are not validated, therefore it is possible to create an invalid configuration. **See the example playbook below for typical variables and values**.
