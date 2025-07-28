@@ -35,6 +35,7 @@
     {% if item.ssh is true %}--ssh{% endif %}
     {% if item.renewal_after_expiry is true %}--allow-renewal-after-expiry{% endif %}
     {% if item.x509_default_dur is defined %}--x509-default-dur {{ item.x509_default_dur }}{% endif %}
+    {% if item.x509_max_dur is defined %}--x509-max-dur {{ item.x509_max_dur }}{% endif %}
     {% if item.client_id is defined %}--client-id {{ item.client_id }}{% endif %}
     {% if item.client_secret is defined %}--client-secret {{ item.client_secret }}{% endif %}
     {% if item.config_endpoint is defined %}--configuration-endpoint {{ item.config_endpoint }}{% endif %}
