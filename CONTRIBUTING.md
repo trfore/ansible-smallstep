@@ -104,7 +104,7 @@ python3 -c 'import webbrowser; webbrowser.open_new(".tox/docs/tmp/build/html/ind
 
 ### Pull Request
 
-- All pull request are run through a more extensive test suite that will validate the collection on multiple OSs and releases, yet local `pre-commit` and `tox` test should provide a good proxy for the github tests.
+- All pull request are run through a more extensive test suite that will validate the collection on multiple OSs and releases, yet **local `pre-commit` and `tox` test should provide a good proxy for the GitHub test**. Specifically, the [GitHub workflow](https://github.com/trfore/ansible-smallstep/blob/main/.github/workflows/test.yml) uses the SmallStep versions defined in [step.version](https://github.com/trfore/ansible-smallstep/blob/main/step.version) against the text matrix in the [ci.yaml](https://github.com/trfore/ansible-smallstep/blob/main/.github/workflows/ci.yml#L38-L45) file.
 
 ## Additional References
 
