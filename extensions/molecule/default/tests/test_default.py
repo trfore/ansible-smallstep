@@ -42,6 +42,12 @@ def test_step_ca_config_provisioner_acme(host):
 
 
 def test_step_ca_cert_subj(host):
+    host_os = host.ansible("setup")["ansible_facts"]["ansible_os_family"]
     cmd = "openssl x509 -in /etc/step-ca/certs/root_ca.crt -noout -subject"
-    expected = "subject=O = Example.com CA, CN = Example.com CA Root CA"
+
+    if host_os == "RedHat":
+        expected = "subject=O=Example.com CA, CN=Example.com CA Root CA"
+    else:
+        expected = "subject=O = Example.com CA, CN = Example.com CA Root CA"
+
     assert host.check_output(cmd) == expected
