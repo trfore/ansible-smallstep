@@ -57,10 +57,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: >-
-          python -c "assert 'failure' not in
-          set([
+          python -c "assert set([
           '${{ needs.format.result }}',
           '${{ needs.lint.result }}',
           '${{ needs.sanity.result }}',
-          '${{ needs.test.result }}'
-          ])"
+          '${{ needs.test.result }}',
+          ]) == {'success'}"
