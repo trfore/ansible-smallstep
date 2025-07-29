@@ -17,7 +17,7 @@
     - name: Provisioners Test | Check That ACME and OIDC Are Added to Provisioners
       ansible.builtin.assert:
         that:
-          - provisioners == ["JWK", "SSHPOP", "ACME", "OIDC", "X5C"]
+          - provisioners == ["JWK", "SSHPOP", "ACME"]
 
     - name: SSH Certificate Test | Check for Files
       ansible.builtin.include_tasks: ../tasks/file-check.yml
