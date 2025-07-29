@@ -3,6 +3,9 @@ breaking_changes:
   - Remove testing support for Ubuntu 20 as it approaches EOL on 31 May 2025.
 bugfixes:
   - Align tox dependencies with dev-requirements file to keep local molecule calls and tox testing at parity.
-trivial:
+minor_changes:
   - Update tox test matrix to test Ansible 2.18.
   - Pin Ansible python packages 'ansible-compat' and 'molecule', see issue 30.
+known_issues:
+  - The collection can fail to pull the latest step-ca and step-cli versions from GitHub when use in large deployments or during repetitive testing.
+    This is due to hitting GitHub's API rate limiter (60 unauthenticated request per hour), we recommend setting 'step_ca_version' and 'step_cli_version' (https://github.com/trfore/ansible-smallstep/issues/42#issuecomment-3075048226).
