@@ -111,3 +111,41 @@ python3 -c 'import webbrowser; webbrowser.open_new(".tox/docs/tmp/build/html/ind
 - [Ansible community guide](https://docs.ansible.com/ansible/devel/community/index.html)
 - [Github Docs: Forking a repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo#forking-a-repository)
 - [Ansible Docs: `ansible-core` support matrix](https://docs.ansible.com/ansible/latest/reference_appendices/release_and_maintenance.html#ansible-core-support-matrix)
+
+## Maintainers
+
+### Changelog
+
+- To reduce contributor(s) workload, the changelog and fragments are managed by the maintainers at release, this section is a quick reference for them.
+- Create changelog fragment under `changelogs/fragments/` for each release. All release fragments should contain a `release_summary` at least one `*_changes`. Example sections, delete any sections that are not relevant:
+
+```yaml
+release_summary: Text
+breaking_changes:
+  - Text
+major_changes:
+  - Text
+minor_changes:
+  - Text
+deprecated_features:
+  - Text
+removed_features:
+  - Text
+security_fixes:
+  - Text
+bugfixes:
+  - Text
+known_issues:
+  - Text
+```
+
+- Generate the changelog:
+
+```bash
+antsibull-changelog lint
+antsibull-changelog release --version v1.2.4 --date 2025-07-28
+```
+
+- See [Ansible Writing Changelog Fragments](https://docs.ansible.com/ansible/devel/community/development_process.html#changelogs-how-to) and [antsibull: Changelog Examples](https://ansible.readthedocs.io/projects/antsibull-changelog/changelogs/#examples) for section suggestions.
+- For additional info see [antsibull-changelog](https://ansible.readthedocs.io/projects/antsibull-changelog).
+- Alternative approach that depends on GitHub labeling, [draft_release.yaml](https://github.com/ansible/ansible-content-actions/blob/main/.github/workflows/draft_release.yaml).
