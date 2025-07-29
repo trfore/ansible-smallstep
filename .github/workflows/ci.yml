@@ -48,7 +48,7 @@ jobs:
       requirements_file: "requirements/dev-requirements.txt"
 
   check:
-    if: ${{ always() }}
+    if: ${{ always() && (github.event_name != 'schedule') }}
     needs:
       - format
       - lint
