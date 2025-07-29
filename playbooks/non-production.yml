@@ -16,6 +16,14 @@
 
     - name: Add Provisioners to Step CA
       role: trfore.smallstep.step_provisioner
+      vars:
+        step_provisioner: # noqa: var-naming[no-role-prefix]
+          - name: acme
+            type: acme
+            ssh: true
+            renewal_after_expiry: true
+            x509_default_dur: "2160h" # 90 days
+            x509_max_dur: "9552h" # 398 days
 
   post_tasks:
     - name: Get Root CA Fingerprint
@@ -48,6 +56,7 @@
             subject: "{{ ansible_fqdn }}"
             path: /etc/step/certs/
             san_0: "{{ ansible_default_ipv4.address }}"
+            not_after: "2160h"
             provisioner: "acme"
 
     - name: Configure Host for SSH Certificates

@@ -17,7 +17,7 @@
     - name: Provisioners Test | Check That ACME and OIDC Are Added to Provisioners
       ansible.builtin.assert:
         that:
-          - provisioners == ["JWK", "SSHPOP", "ACME", "OIDC", "X5C"]
+          - provisioners == ["JWK", "SSHPOP", "ACME"]
 
     - name: SSH Certificate Test | Check for Files
       ansible.builtin.include_tasks: ../tasks/file-check.yml
@@ -40,3 +40,20 @@
       loop:
         - /etc/step-ca/certs/ssh_user_key.pub
         - /etc/ssh/ssh_host_ecdsa_key-cert.pub
+
+    - name: SSH Certificate Test | Get TLS Dates
+      ansible.builtin.shell: |
+        set -o pipefail
+        start="$(openssl x509 -in /etc/step/certs/*.crt -noout -startdate | awk -F '=' '{print $2}')"
+        end="$(openssl x509 -in /etc/step/certs/*.crt -noout -enddate | awk -F '=' '{print $2}')"
+        delta="$((($(date -d "$end" +%s) - $(date -d "$start" +%s))/86400))"
+
+        echo $delta
+      args:
+        executable: /bin/bash
+      register: cert_days_valid
+      changed_when: cert_days_valid.rc != 0
+
+    - name: SSH Certificate Test | Check TLS Dates
+      ansible.builtin.assert:
+        that: '"90" is in cert_days_valid.stdout'
