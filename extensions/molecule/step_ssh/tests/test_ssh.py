@@ -41,8 +41,8 @@ def test_tls_duration(host, host_groups):
         cmd = f"openssl x509 -in /etc/step/certs/{hostname}.crt -noout"
         date_format = "%b %d %H:%M:%S %Y %Z"
 
-        _, start_date = host.run(cmd + " -startdate").stdout.split("=")
-        _, end_date = host.run(cmd + " -enddate").stdout.split("=")
+        start_date = host.run(cmd + " -startdate").stdout.split("=")[1]
+        end_date = host.run(cmd + " -enddate").stdout.split("=")[1]
 
         start = datetime.strptime(start_date.strip(), date_format)
         end = datetime.strptime(end_date.strip(), date_format)
