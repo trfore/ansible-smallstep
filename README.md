@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/trfore/ansible-smallstep/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/trfore/ansible-smallstep/actions/workflows/ci.yml)
 [![CD](https://github.com/trfore/ansible-smallstep/actions/workflows/cd.yml/badge.svg)](https://github.com/trfore/ansible-smallstep/actions/workflows/cd.yml)
-[![Release Check](https://github.com/trfore/ansible-smallstep/actions/workflows/release-check.yml/badge.svg)](https://github.com/trfore/ansible-smallstep/actions/workflows/release-check.yml)
+[![Release Check](https://github.com/trfore/ansible-smallstep/actions/workflows/step-release-check.yml/badge.svg)](https://github.com/trfore/ansible-smallstep/actions/workflows/step-release-check.yml)
 
 - This collection is for setting up a a public key infrastructure (PKI) using Smallstep. It will install CA server and, optionally, configure the CA server and host servers ("clients") to request x509 certificates from the CA.
 - The default values for the collection are set with the intention of being used in production and **initializing the CA server offline, outside of an Ansible play**. However, you can set `step_ca_initialize: true` and initialize the PKI via an Ansible playbook, for more details see:
