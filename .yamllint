@@ -4,7 +4,6 @@ extends: default
 ignore:
   - .tox/
   - .venv/
-  - "*.py"
 rules:
   braces:
     max-spaces-inside: 1
