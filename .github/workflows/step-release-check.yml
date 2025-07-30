@@ -1,4 +1,4 @@
-name: Release Check
+name: Step Release Check
 on:
   pull_request:
     paths:

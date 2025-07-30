@@ -1,0 +1,9 @@
+release_summary: Allow for blank spaces in the CA name
+minor_changes:
+  - add test for CA names with spacing (https://github.com/trfore/ansible-smallstep/pull/46).
+bugfixes:
+  - quote CA name to handle spaces in step_ca init (https://github.com/trfore/ansible-smallstep/pull/45).
+  - update SSH task to accept spacing in provisioner name (https://github.com/trfore/ansible-smallstep/pull/47).
+known_issues:
+  - The collection can fail to pull the latest step-ca and step-cli versions from GitHub when use in large deployments or during repetitive testing.
+    This is due to hitting GitHub's API rate limiter (60 unauthenticated request per hour), we recommend setting 'step_ca_version' and 'step_cli_version' (https://github.com/trfore/ansible-smallstep/issues/42#issuecomment-3075048226).
