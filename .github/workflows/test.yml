@@ -33,7 +33,7 @@ jobs:
       MOLECULE_IMAGE: trfore/docker-${{ inputs.distro }}-systemd
     steps:
       - name: Check out codebase
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup python 3
         uses: actions/setup-python@v5
