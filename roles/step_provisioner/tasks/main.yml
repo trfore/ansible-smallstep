@@ -3,14 +3,14 @@
   block:
     - name: Check that step_provisioner is a list
       ansible.builtin.assert:
-        that: "{{ step_provisioner | type_debug == 'list' }}"
+        that: step_provisioner | type_debug == 'list'
         fail_msg: "{{ step_provisioner }} needs to be a list of dictionaries"
         success_msg: "{{ step_provisioner }} is a list"
         quiet: true
 
     - name: Check that step_provisioner is a list of dictionaries
       ansible.builtin.assert:
-        that: "{{ item | type_debug == 'dict' }}"
+        that: item | type_debug == 'dict'
         fail_msg: "{{ item }} needs to be a list of dictionaries"
         quiet: true
       loop: "{{ step_provisioner }}"

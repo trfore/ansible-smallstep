@@ -1,7 +1,10 @@
 ---
 - name: Install Step CLI - Check Required Variables
   ansible.builtin.assert:
-    that: "{{ req_var }} is defined and {{ req_var }} | length > 0 and {{ req_var }} != None"
+    that:
+      - lookup('vars', req_var, default='') is defined
+      - lookup('vars', req_var, default='') | length > 0
+      - lookup('vars', req_var) != None
     fail_msg: "{{ req_var }} needs to be set for the role to work"
     success_msg: "{{ req_var }} is defined"
     quiet: true
