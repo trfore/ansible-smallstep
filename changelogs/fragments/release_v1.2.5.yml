@@ -1,0 +1,9 @@
+release_summary: Fix issues using collection with Ansible 2.19
+minor_changes:
+  - Add sanity test and rm testing on EOL ansible 2.16 to local tox environments (https://github.com/trfore/ansible-smallstep/pull/58).
+  - Update supported ansible versions (https://github.com/trfore/ansible-smallstep/pull/67).
+bugfixes:
+  - Fix remove template delimiters from assert conditions across all roles (https://github.com/trfore/ansible-smallstep/pull/62).
+known_issues:
+  - The collection can fail to pull the latest step-ca and step-cli versions from GitHub when use in large deployments or during repetitive testing.
+    This is due to hitting GitHub's API rate limiter (60 unauthenticated request per hour), we recommend setting 'step_ca_version' and 'step_cli_version' (https://github.com/trfore/ansible-smallstep/issues/42#issuecomment-3075048226).
