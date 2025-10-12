@@ -1,9 +1,7 @@
 ---
 - name: Initialize | Check Required Variables
   ansible.builtin.assert:
-    that:
-      - (req_var.split('.') | length == 1 and vars[req_var] is defined and vars[req_var] | length > 0 and vars[req_var] != None) or
-        (req_var.split('.') | length == 2 and vars[req_var.split('.')[0]][req_var.split('.')[1]] is defined and vars[req_var.split('.')[0]][req_var.split('.')[1]] | length > 0)
+    that: req_var is defined and req_var | length > 0 and req_var != None
     fail_msg: "{{ req_var }} needs to be set for the role to work"
     success_msg: "{{ req_var }} is defined"
     quiet: true
