@@ -21,6 +21,7 @@
 | `step_ca_enable_service`       | `false`         | Boolean, create systemd service for `step-ca`.                               | No                  |                               |
 | `step_ca_path`                 | `/etc/step-ca/` | Path, Step CA folder containing configuration and certificate files.         | No                  |                               |
 | `step_ca_address`              | `:443`          | String, address the CA will listen at.                                       | No                  | `--address`                   |
+| `step_ca_alt_fqdn`             | not defined     | String, additional DNS name to add to the configuration file.                | No                  | `--dns`                       |
 | `step_ca_name`                 | not defined     | String, name of the public key infrastructure (PKI).                         | Yes, if initialized | `--name`                      |
 | `step_ca_password`             | not defined     | String, password to encrypt the root and intermediate keys.                  | Yes, if initialized | `--password-file`             |
 | `step_ca_provisioner_password` | not defined     | String, password for default JWK provisioner.                                | Yes, if initialized | `--provisioner-password-file` |
