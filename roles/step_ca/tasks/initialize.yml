@@ -58,7 +58,7 @@
     {% if step_ca_root_cert is defined %}--root {{ step_ca_root_cert }}{% endif %}
     {% if step_ca_root_key is defined %}--key {{ step_ca_root_key }}{% endif %}
     {% if step_ca_root_key_password is defined %}--key-password-file {{ step_ca_root_key_password }}{% endif %}
-    {% if step_ca_ssh_mgmt is true %}--ssh{% endif %}
+    {% if step_ca_ssh_mgmt is true | default(omit) %}--ssh{% endif %}
     --name={{ step_ca_name | quote }}
     --dns={{ ansible_fqdn }}
     --dns={{ ansible_default_ipv4.address }}
