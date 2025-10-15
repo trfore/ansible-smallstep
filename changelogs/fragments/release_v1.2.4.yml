@@ -1,0 +1,9 @@
+release_summary: Fix issues setting certificate valid periods
+minor_changes:
+  - extend test coverage for var options in 'step_certs' and 'step_provisioner' (https://github.com/trfore/ansible-smallstep/pull/53).
+bugfixes:
+  - Fix 'not-after' variable, works as expected for the 'step_certs' task (https://github.com/trfore/ansible-smallstep/pull/50).
+  - Add missing 'x509_max_dur variable' in the 'step_provisioner' task (https://github.com/trfore/ansible-smallstep/pull/51).
+known_issues:
+  - The collection can fail to pull the latest step-ca and step-cli versions from GitHub when use in large deployments or during repetitive testing.
+    This is due to hitting GitHub's API rate limiter (60 unauthenticated request per hour), we recommend setting 'step_ca_version' and 'step_cli_version' (https://github.com/trfore/ansible-smallstep/issues/42#issuecomment-3075048226).

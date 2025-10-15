@@ -16,7 +16,7 @@
 
 - name: Renewal | Check for SSHPOP Provisioner
   ansible.builtin.assert:
-    that: "{{ 'SSHPOP' in step_ssh_ca_provisioners.stdout | from_json | json_query(jmesquery) }}"
+    that: "'SSHPOP' in step_ssh_ca_provisioners.stdout | from_json | json_query(jmesquery)"
     fail_msg: "SSHPOP provisioner not found, please add it to Step CA"
     success_msg: "The SSHPOP provisioner is available"
     quiet: true

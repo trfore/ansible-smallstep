@@ -3,67 +3,128 @@ releases:
   1.0.0:
     changes:
       major_changes:
-        - Consolidated numerous step roles into a single collection.
+      - Consolidated numerous step roles into a single collection.
       release_summary: Initial collection release, deploy a PKI using Smallstep.
     fragments:
-      - release_v1.0.0.yml
+    - release_v1.0.0.yml
     objects:
       role:
-        - description: Install and Initialize Step CA
-          name: step_ca
-          namespace: null
-        - description: Download and add the CA root certificate to trust stores
-          name: step_ca_cert
-          namespace: null
-        - description: Request an x509 certificate from the CA and automatically renew
-            it
-          name: step_cert
-          namespace: null
-        - description: Install Step CLI
-          name: step_cli
-          namespace: null
-        - description: Add provisioners to Step CA
-          name: step_provisioner
-          namespace: null
-    release_date: "2024-04-01"
+      - description: Install and Initialize Step CA
+        name: step_ca
+        namespace: null
+      - description: Download and add the CA root certificate to trust stores
+        name: step_ca_cert
+        namespace: null
+      - description: Request an x509 certificate from the CA and automatically renew
+          it
+        name: step_cert
+        namespace: null
+      - description: Install Step CLI
+        name: step_cli
+        namespace: null
+      - description: Add provisioners to Step CA
+        name: step_provisioner
+        namespace: null
+    release_date: '2024-04-01'
   1.1.0:
     changes:
       major_changes:
-        - Added SSH role for generating SSH certificates.
-        - Added support for CentOS 8-9 and Debian 10-12.
+      - Added SSH role for generating SSH certificates.
+      - Added support for CentOS 8-9 and Debian 10-12.
       release_summary: New feature, request SSH certificates from step CA.
     fragments:
-      - release_v1.1.0.yml
+    - release_v1.1.0.yml
     objects:
       role:
-        - description: Request SSH Certificates from step CA Server
-          name: step_ssh
-          namespace: null
-    release_date: "2024-04-01"
+      - description: Request SSH Certificates from step CA Server
+        name: step_ssh
+        namespace: null
+    release_date: '2024-04-01'
   1.1.1:
     changes:
       release_summary: Adds files to improve development workflow; validates collection
         against step-ca & cli `0.26.1`
     fragments:
-      - release_v1.1.1.yml
-    release_date: "2024-04-25"
+    - release_v1.1.1.yml
+    release_date: '2024-04-25'
   1.1.2:
     changes:
       release_summary: Improve development workflow with format/lint configs and GH
         workflows
     fragments:
-      - release_v1.1.2.yml
-    release_date: "2024-05-05"
+    - release_v1.1.2.yml
+    release_date: '2024-05-05'
   1.2.0:
     changes:
       breaking_changes:
-        - Remove testing support for CentOS 8 due to EOL.
-        - Remove testing support for Debian 10 due to EOL.
+      - Remove testing support for CentOS 8 due to EOL.
+      - Remove testing support for Debian 10 due to EOL.
       bugfixes:
-        - Pulling the latest smallstep CLI package, due to the GitHub tag not aligning
-          with the package name.
+      - Pulling the latest smallstep CLI package, due to the GitHub tag not aligning
+        with the package name.
       release_summary: Fix installing Smallstep CLI > 0.27.2, add testing for Ansible
         2.17, and remove testing/support for CentOS 8
     fragments:
-      - release_v1.2.0.yml
-    release_date: "2024-11-04"
+    - release_v1.2.0.yml
+    release_date: '2024-11-04'
+  1.2.1:
+    changes:
+      bugfixes:
+      - Pulls the correct smallstep CA package for versions 0.28+, see issue 25
+      release_summary: Fix installing Smallstep CA > 0.28.0
+    fragments:
+    - release_v1.2.1.yml
+    release_date: '2025-02-27'
+  1.2.2:
+    changes:
+      breaking_changes:
+      - Remove testing support for Ubuntu 20 as it approaches EOL on 31 May 2025.
+      bugfixes:
+      - Align tox dependencies with dev-requirements file to keep local molecule calls
+        and tox testing at parity.
+      known_issues:
+      - The collection can fail to pull the latest step-ca and step-cli versions from
+        GitHub when use in large deployments or during repetitive testing. This is
+        due to hitting GitHub's API rate limiter (60 unauthenticated request per hour),
+        we recommend setting 'step_ca_version' and 'step_cli_version' (https://github.com/trfore/ansible-smallstep/issues/42#issuecomment-3075048226).
+      minor_changes:
+      - Pin Ansible python packages 'ansible-compat' and 'molecule', see issue 30.
+      - Update tox test matrix to test Ansible 2.18.
+      release_summary: Add testing for Ansible 2.18, and remove testing/support for
+        Ubuntu 20.04
+    fragments:
+    - release_v1.2.2.yml
+    release_date: '2025-07-15'
+  1.2.3:
+    changes:
+      bugfixes:
+      - quote CA name to handle spaces in step_ca init (https://github.com/trfore/ansible-smallstep/pull/45).
+      - update SSH task to accept spacing in provisioner name (https://github.com/trfore/ansible-smallstep/pull/47).
+      known_issues:
+      - The collection can fail to pull the latest step-ca and step-cli versions from
+        GitHub when use in large deployments or during repetitive testing. This is
+        due to hitting GitHub's API rate limiter (60 unauthenticated request per hour),
+        we recommend setting 'step_ca_version' and 'step_cli_version' (https://github.com/trfore/ansible-smallstep/issues/42#issuecomment-3075048226).
+      minor_changes:
+      - add test for CA names with spacing (https://github.com/trfore/ansible-smallstep/pull/46).
+      release_summary: Allow for blank spaces in the CA name
+    fragments:
+    - release_v1.2.3.yml
+    release_date: '2025-07-25'
+  1.2.4:
+    changes:
+      bugfixes:
+      - Add missing 'x509_max_dur variable' in the 'step_provisioner' task (https://github.com/trfore/ansible-smallstep/pull/51).
+      - Fix 'not-after' variable, works as expected for the 'step_certs' task (https://github.com/trfore/ansible-smallstep/pull/50).
+      known_issues:
+      - The collection can fail to pull the latest step-ca and step-cli versions from
+        GitHub when use in large deployments or during repetitive testing. This is
+        due to hitting GitHub's API rate limiter (60 unauthenticated request per hour),
+        we recommend setting 'step_ca_version' and 'step_cli_version' (https://github.com/trfore/ansible-smallstep/issues/42#issuecomment-3075048226).
+      minor_changes:
+      - extend test coverage for var options in 'step_certs' and 'step_provisioner'
+        (https://github.com/trfore/ansible-smallstep/pull/53).
+      release_summary: Fix issues setting certificate valid periods
+    fragments:
+    - release_v1.2.4.yml
+    release_date: '2025-07-28'

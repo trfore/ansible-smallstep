@@ -3,14 +3,14 @@
   block:
     - name: Check that step_provisioner is a list
       ansible.builtin.assert:
-        that: "{{ step_provisioner | type_debug == 'list' }}"
+        that: step_provisioner | type_debug == 'list'
         fail_msg: "{{ step_provisioner }} needs to be a list of dictionaries"
         success_msg: "{{ step_provisioner }} is a list"
         quiet: true
 
     - name: Check that step_provisioner is a list of dictionaries
       ansible.builtin.assert:
-        that: "{{ item | type_debug == 'dict' }}"
+        that: item | type_debug == 'dict'
         fail_msg: "{{ item }} needs to be a list of dictionaries"
         quiet: true
       loop: "{{ step_provisioner }}"
@@ -32,9 +32,10 @@
   ansible.builtin.command: >-
     step ca provisioner add {{ item.name }}
     --type {{ item.type }}
-    {% if item.ssh is true %}--ssh{% endif %}
-    {% if item.renewal_after_expiry is true %}--allow-renewal-after-expiry{% endif %}
+    {% if item.ssh is true | default(omit) %}--ssh{% endif %}
+    {% if item.renewal_after_expiry is true | default(omit) %}--allow-renewal-after-expiry{% endif %}
     {% if item.x509_default_dur is defined %}--x509-default-dur {{ item.x509_default_dur }}{% endif %}
+    {% if item.x509_max_dur is defined %}--x509-max-dur {{ item.x509_max_dur }}{% endif %}
     {% if item.client_id is defined %}--client-id {{ item.client_id }}{% endif %}
     {% if item.client_secret is defined %}--client-secret {{ item.client_secret }}{% endif %}
     {% if item.config_endpoint is defined %}--configuration-endpoint {{ item.config_endpoint }}{% endif %}

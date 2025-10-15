@@ -4,6 +4,96 @@ trfore.smallstep Collection Release Notes
 
 .. contents:: Topics
 
+v1.2.4
+======
+
+Release Summary
+---------------
+
+Fix issues setting certificate valid periods
+
+Minor Changes
+-------------
+
+- extend test coverage for var options in 'step_certs' and 'step_provisioner' (https://github.com/trfore/ansible-smallstep/pull/53).
+
+Bugfixes
+--------
+
+- Add missing 'x509_max_dur variable' in the 'step_provisioner' task (https://github.com/trfore/ansible-smallstep/pull/51).
+- Fix 'not-after' variable, works as expected for the 'step_certs' task (https://github.com/trfore/ansible-smallstep/pull/50).
+
+Known Issues
+------------
+
+- The collection can fail to pull the latest step-ca and step-cli versions from GitHub when use in large deployments or during repetitive testing. This is due to hitting GitHub's API rate limiter (60 unauthenticated request per hour), we recommend setting 'step_ca_version' and 'step_cli_version' (https://github.com/trfore/ansible-smallstep/issues/42#issuecomment-3075048226).
+
+v1.2.3
+======
+
+Release Summary
+---------------
+
+Allow for blank spaces in the CA name
+
+Minor Changes
+-------------
+
+- add test for CA names with spacing (https://github.com/trfore/ansible-smallstep/pull/46).
+
+Bugfixes
+--------
+
+- quote CA name to handle spaces in step_ca init (https://github.com/trfore/ansible-smallstep/pull/45).
+- update SSH task to accept spacing in provisioner name (https://github.com/trfore/ansible-smallstep/pull/47).
+
+Known Issues
+------------
+
+- The collection can fail to pull the latest step-ca and step-cli versions from GitHub when use in large deployments or during repetitive testing. This is due to hitting GitHub's API rate limiter (60 unauthenticated request per hour), we recommend setting 'step_ca_version' and 'step_cli_version' (https://github.com/trfore/ansible-smallstep/issues/42#issuecomment-3075048226).
+
+v1.2.2
+======
+
+Release Summary
+---------------
+
+Add testing for Ansible 2.18, and remove testing/support for Ubuntu 20.04
+
+Minor Changes
+-------------
+
+- Pin Ansible python packages 'ansible-compat' and 'molecule', see issue 30.
+- Update tox test matrix to test Ansible 2.18.
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- Remove testing support for Ubuntu 20 as it approaches EOL on 31 May 2025.
+
+Bugfixes
+--------
+
+- Align tox dependencies with dev-requirements file to keep local molecule calls and tox testing at parity.
+
+Known Issues
+------------
+
+- The collection can fail to pull the latest step-ca and step-cli versions from GitHub when use in large deployments or during repetitive testing. This is due to hitting GitHub's API rate limiter (60 unauthenticated request per hour), we recommend setting 'step_ca_version' and 'step_cli_version' (https://github.com/trfore/ansible-smallstep/issues/42#issuecomment-3075048226).
+
+v1.2.1
+======
+
+Release Summary
+---------------
+
+Fix installing Smallstep CA > 0.28.0
+
+Bugfixes
+--------
+
+- Pulls the correct smallstep CA package for versions 0.28+, see issue 25
+
 v1.2.0
 ======
 

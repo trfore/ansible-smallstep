@@ -49,17 +49,19 @@ tox -f default run
 tox run-parallel
 ```
 
-- You can also pass environment variables to tox for: `MOLECULE_IMAGE`, `STEP_CA_VERSION`, and `STEP_CLI_VERSION`. When running multiple test, we highly recommend using `STEP_*_VERSION` variables to avoid hitting GitHub's API rate limiter.
+- You can also pass environment variables to tox for: `MOLECULE_IMAGE`, `STEP_CA_VERSION`, and `STEP_CLI_VERSION`. **When running multiple test, we highly recommend using `STEP_*_VERSION` variables to avoid hitting GitHub's API rate limiter.**
 
 ```sh
 # use a different docker image
-MOLECULE_IMAGE='trfore/docker-debian12-systemd' tox -e py-ansible2.17-default  run
+MOLECULE_IMAGE='trfore/docker-debian12-systemd' tox -e py3.11-ansible2.17-default run
 
 # test a specific version of Smallstep CA or CLI
-STEP_CA_VERSION='0.26.0' STEP_CLI_VERSION='0.26.0' tox -e py-ansible2.17-default  run
+STEP_CA_VERSION='0.28.4' STEP_CLI_VERSION='0.28.7' tox -e py3.11-ansible2.17-default run
+STEP_CA_VERSION='0.28.4' STEP_CLI_VERSION='0.28.7' tox -e py3.11-ansible2.17-ssh run
 
 # highly recommended for parallel runs to avoid API rate limit
-STEP_CA_VERSION='0.26.0' STEP_CLI_VERSION='0.26.0' tox run-parallel
+STEP_CA_VERSION='0.28.4' STEP_CLI_VERSION='0.28.7' tox run-parallel
+STEP_CA_VERSION='0.28.4' STEP_CLI_VERSION='0.28.7' tox -f py3.11 run-parallel
 ```
 
 - For iterative development and testing, the tox molecule environments are written to accept `molecule` arguments. This allows for codebase changes to be tested as you write across multiple distros and versions of `ansible-core`.
@@ -67,11 +69,14 @@ STEP_CA_VERSION='0.26.0' STEP_CLI_VERSION='0.26.0' tox run-parallel
 ```sh
 # molecule converge
 tox -e py-ansible2.17-default  run -- converge -s default
+
 # molecule test w/o destroying the container
-tox -e py-ansible2.17-default  run -- test -s default --destroy=never
+# ex: tox -e TOX_ENV_NAME  run -- test -s MOLECULE_SCENARIO_NAME --destroy=never
+STEP_CA_VERSION='0.28.4' STEP_CLI_VERSION='0.28.7' tox -e py-ansible2.17-default run -- test -s default --destroy=never
+STEP_CA_VERSION='0.28.4' STEP_CLI_VERSION='0.28.7' tox -e py-ansible2.17-ssh run -- test -s step_ssh --destroy=never
 
 # exec into the container via tox
-tox -e py-ansible2.17-default  run -- login -s default
+tox -e py-ansible2.17-default run -- login -s default
 # exec into the container
 docker exec -it py-ansible2.17-default  bash
 
@@ -100,10 +105,48 @@ python3 -c 'import webbrowser; webbrowser.open_new(".tox/docs/tmp/build/html/ind
 
 ### Pull Request
 
-- All pull request are run through a more extensive test suite that will validate the collection on multiple OSs and releases, yet local `pre-commit` and `tox` test should provide a good proxy for the github tests.
+- All pull request are run through a more extensive test suite that will validate the collection on multiple OSs and releases, yet **local `pre-commit` and `tox` test should provide a good proxy for the GitHub test**. Specifically, the [GitHub workflow](https://github.com/trfore/ansible-smallstep/blob/main/.github/workflows/test.yml) uses the SmallStep versions defined in [step.version](https://github.com/trfore/ansible-smallstep/blob/main/step.version) against the text matrix in the [ci.yaml](https://github.com/trfore/ansible-smallstep/blob/main/.github/workflows/ci.yml#L38-L45) file.
 
 ## Additional References
 
 - [Ansible community guide](https://docs.ansible.com/ansible/devel/community/index.html)
 - [Github Docs: Forking a repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo#forking-a-repository)
 - [Ansible Docs: `ansible-core` support matrix](https://docs.ansible.com/ansible/latest/reference_appendices/release_and_maintenance.html#ansible-core-support-matrix)
+
+## Maintainers
+
+### Changelog
+
+- To reduce contributor(s) workload, the changelog and fragments are managed by the maintainers at release, this section is a quick reference for them.
+- Create changelog fragment under `changelogs/fragments/` for each release. All release fragments should contain a `release_summary` at least one `*_changes`. Example sections, delete any sections that are not relevant:
+
+```yaml
+release_summary: Text
+breaking_changes:
+  - Text
+major_changes:
+  - Text
+minor_changes:
+  - Text
+deprecated_features:
+  - Text
+removed_features:
+  - Text
+security_fixes:
+  - Text
+bugfixes:
+  - Text
+known_issues:
+  - Text
+```
+
+- Generate the changelog:
+
+```bash
+antsibull-changelog lint
+antsibull-changelog release --version v1.2.4 --date 2025-07-28
+```
+
+- See [Ansible Writing Changelog Fragments](https://docs.ansible.com/ansible/devel/community/development_process.html#changelogs-how-to) and [antsibull: Changelog Examples](https://ansible.readthedocs.io/projects/antsibull-changelog/changelogs/#examples) for section suggestions.
+- For additional info see [antsibull-changelog](https://ansible.readthedocs.io/projects/antsibull-changelog).
+- Alternative approach that depends on GitHub labeling, [draft_release.yaml](https://github.com/ansible/ansible-content-actions/blob/main/.github/workflows/draft_release.yaml).

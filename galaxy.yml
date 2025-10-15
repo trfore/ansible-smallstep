@@ -1,6 +1,6 @@
 namespace: trfore
 name: smallstep
-version: 1.2.1
+version: 1.2.5
 readme: README.md
 authors:
   - Taylor Fore (https://github.com/trfore/)

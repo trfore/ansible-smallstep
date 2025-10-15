@@ -1,0 +1,7 @@
+files:
+  - /etc/step-ca/certs/ssh_host_ca_key.pub
+  - /etc/step-ca/certs/ssh_user_ca_key.pub
+  - /etc/step-ca/config/ca.json
+
+services:
+  - step-ca

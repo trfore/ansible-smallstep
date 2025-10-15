@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/trfore/ansible-smallstep/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/trfore/ansible-smallstep/actions/workflows/ci.yml)
 [![CD](https://github.com/trfore/ansible-smallstep/actions/workflows/cd.yml/badge.svg)](https://github.com/trfore/ansible-smallstep/actions/workflows/cd.yml)
-[![Release Check](https://github.com/trfore/ansible-smallstep/actions/workflows/release-check.yml/badge.svg)](https://github.com/trfore/ansible-smallstep/actions/workflows/release-check.yml)
+[![Release Check](https://github.com/trfore/ansible-smallstep/actions/workflows/step-release-check.yml/badge.svg)](https://github.com/trfore/ansible-smallstep/actions/workflows/step-release-check.yml)
 
 - This collection is for setting up a a public key infrastructure (PKI) using Smallstep. It will install CA server and, optionally, configure the CA server and host servers ("clients") to request x509 certificates from the CA.
 - The default values for the collection are set with the intention of being used in production and **initializing the CA server offline, outside of an Ansible play**. However, you can set `step_ca_initialize: true` and initialize the PKI via an Ansible playbook, for more details see:
@@ -31,7 +31,7 @@ ansible-galaxy collection install trfore.smallstep
 
 ## Tested Platforms
 
-- `ansible-core` 2.16, 2.17 & 2.18
+- `ansible-core` 2.17, 2.18 & 2.19
 - CentOS Stream 9
 - Debian 11 & 12
 - Ubuntu 22.04 & 24.04
@@ -40,10 +40,12 @@ ansible-galaxy collection install trfore.smallstep
 
 ### Production Workflow
 
+**NOTE**: For installs with numerous end-points (50+) or repetitive playbook testing, **we highly recommend using `STEP_*_VERSION` variables in your playbook**
+**to avoid hitting GitHub's API rate limiter** (60 unauthenticated request per hour).
+
 - Phase I: Create a step CA server.
 
 ```yaml
----
 - name: Setup Step CA Server
   hosts: ca-server
   become: true
@@ -51,9 +53,13 @@ ansible-galaxy collection install trfore.smallstep
   roles:
     - name: Install Step CLI
       role: trfore.smallstep.step_cli
+      vars:
+        step_cli_version: "0.28.7"
 
     - name: Install Step Certificates
       role: trfore.smallstep.step_ca
+      vars:
+        step_ca_version: "0.28.4"
 ### Initialize the CA Offline, storing the root key in an encrypted drive ###
 ```
 
@@ -157,13 +163,11 @@ ansible-galaxy collection install trfore.smallstep
     - name: Configure Host for SSH Certificates
       role: trfore.smallstep.step_ssh
       vars:
-        step_ssh_provisioner: "Example.com" # JWK provisioner name extracted from 'Example.com CA'
+        step_ssh_provisioner: "Example.com CA" # JWK provisioner name extracted from 'Example.com CA'
         step_ssh_provisioner_password: "password02" # Same value passed to 'step_provisioner_password', see 'step_ssh' README for details.
 ```
 
-## Author and License Information
-
-Taylor Fore (https://github.com/trfore)
+## License
 
 See LICENSE file for this Ansible collection.
 
@@ -172,6 +176,13 @@ Smallstep (`certificates` and `cli`) is Apache 2.0 license software from Smallst
 - https://smallstep.com/terms-of-use/
 - https://github.com/smallstep/certificates/blob/master/LICENSE
 - https://github.com/smallstep/cli/blob/master/LICENSE
+
+## Contributors
+
+- [trfore](https://github.com/trfore) - original author and maintainer
+
+Special thanks to all those who have [contributed to the project](https://github.com/trfore/ansible-smallstep/graphs/contributors)!
+Interested in adding a feature or fixing a bug? Checkout the [contributing guide](CONTRIBUTING.md).
 
 ## References
 

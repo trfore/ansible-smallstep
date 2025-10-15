@@ -1,0 +1,7 @@
+files:
+  - /etc/step-ca/certs/ssh_user_key.pub
+  - /etc/ssh/ssh_host_ecdsa_key-cert.pub
+
+services:
+  - cert-renewer@*.timer
+  - ssh-cert-renewer@ssh_host_ecdsa_key.timer

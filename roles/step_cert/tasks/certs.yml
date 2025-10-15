@@ -1,7 +1,7 @@
 ---
 - name: Certs | Check Required Variables
   ansible.builtin.assert:
-    that: "{{ req_var }} is defined and {{ req_var }} | length > 0 and {{ req_var }} != None"
+    that: req_var is defined and req_var | length > 0 and req_var != None
     fail_msg: "{{ req_var }} needs to be set for the role to work"
     success_msg: "{{ req_var }} is defined"
     quiet: true
@@ -26,7 +26,7 @@
     {% if item.token is defined %}--token {{ item.token }}{% endif %}
     {% if item.san_0 is defined %}--san {{ item.san_0 }}{% endif %}
     {% if item.san_1 is defined %}--san {{ item.san_1 }}{% endif %}
-    {% if item.not_after is defined %}--san {{ item.not_after }}{% endif %}
+    {% if item.not_after is defined %}--not-after {{ item.not_after }}{% endif %}
     {{ item.subject }}
     {{ item.path }}{{ item.name }}.crt
     {{ item.path }}{{ item.name }}.key
