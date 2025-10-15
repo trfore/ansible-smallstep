@@ -1,0 +1,6 @@
+release_summary: Add support for alternative DNS values to CA
+feature:
+  - Non-production CA initialization, adds support for additional DNS entries, e.g. "example.local". Retains the automatically generated entries using the host's FQDN and IP address determined by Ansible.
+known_issues:
+  - The collection can fail to pull the latest step-ca and step-cli versions from GitHub when use in large deployments or during repetitive testing.
+    This is due to hitting GitHub's API rate limiter (60 unauthenticated request per hour), we recommend setting 'step_ca_version' and 'step_cli_version' (https://github.com/trfore/ansible-smallstep/issues/42#issuecomment-3075048226).
