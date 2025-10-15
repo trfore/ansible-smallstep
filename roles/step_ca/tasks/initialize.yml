@@ -62,6 +62,7 @@
     --name={{ step_ca_name | quote }}
     --dns={{ ansible_fqdn }}
     --dns={{ ansible_default_ipv4.address }}
+    {% if step_ca_alt_fqdn is defined %}--dns {{ step_ca_alt_fqdn }}{% endif %}
     --address={{ step_ca_address }}
     --provisioner={{ step_ca_name | quote }}
     --password-file={{ ca_password_file.dest }}
