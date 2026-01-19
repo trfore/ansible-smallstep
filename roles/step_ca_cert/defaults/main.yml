@@ -1,4 +1,6 @@
 ---
-step_ca_path: /etc/step-ca/ # noqa: var-naming[no-role-prefix]
 step_ca_cert_firefox: false
 step_ca_cert_java: false
+step_ca_fingerprint: "" # noqa: var-naming[no-role-prefix]
+step_ca_path: /etc/step-ca/ # noqa: var-naming[no-role-prefix]
+step_ca_url: "" # noqa: var-naming[no-role-prefix]
