@@ -1,0 +1,8 @@
+release_summary: lower variable precedence of null vars in step_ca_cert
+bugfixes:
+  - Lowers the precedence of `step_ca_fingerprint` and `step_ca_url`, allowing end-users to define these values in a inventory file.
+minor_changes:
+  - Validate collection against the lastest release of step-ca and step-cli.
+known_issues:
+  - The collection can fail to pull the latest step-ca and step-cli versions from GitHub when use in large deployments or during repetitive testing.
+    This is due to hitting GitHub's API rate limiter (60 unauthenticated request per hour), we recommend setting 'step_ca_version' and 'step_cli_version' (https://github.com/trfore/ansible-smallstep/issues/42#issuecomment-3075048226).
