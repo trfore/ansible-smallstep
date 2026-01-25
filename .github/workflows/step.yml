@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out codebase
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Get latest step-cli release
         id: step_release
@@ -66,7 +66,7 @@ jobs:
 
       - name: Create pull request
         if: env.UPDATE_VERSION_FILE
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.WORKFLOW_TOKEN }}
           commit-message: update step-ca to ${{ steps.step_release.outputs.latest_ca }} and step-cli to ${{ steps.step_release.outputs.latest_cli }}
